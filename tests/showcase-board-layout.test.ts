@@ -14,9 +14,13 @@ test("showcase board rows link to detail pages", () => {
   assert.match(boardSource, /href=\{`\/showcase\/\$\{post\.id\}`\}/);
 });
 
-test("showcase board alternates odd and even row backgrounds", () => {
-  assert.match(boardSource, /odd:bg-white/);
-  assert.match(boardSource, /even:bg-foam/);
+test("showcase board uses a simple list surface instead of a table strip", () => {
+  assert.match(boardSource, /bg-white p-5 shadow-\[0_24px_52px_-38px_rgba\(7,59,58,0\.42\)\]/);
+  assert.match(boardSource, /divide-y divide-mist/);
+  assert.match(boardSource, /sm:grid-cols-\[minmax\(0,1fr\)_9rem\]/);
+  assert.doesNotMatch(boardSource, /grid-cols-\[1fr_5\.5rem_6\.5rem\]/);
+  assert.doesNotMatch(boardSource, /odd:bg-white/);
+  assert.doesNotMatch(boardSource, /even:bg-foam/);
 });
 
 test("showcase detail page loads a single post", () => {
