@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="제천 ATV & 수상레저">
+  <rect width="64" height="64" rx="12" fill="#071d22"/>
+  <path d="M10 39c6 0 6-5 12-5s6 5 12 5 6-5 12-5 6 5 12 5" fill="none" stroke="#f5b23d" stroke-width="5" stroke-linecap="round"/>
+  <path d="M15 28h18l7-8 9 8h4" fill="none" stroke="#f8fbf6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="24" cy="44" r="5" fill="#ee6b32"/>
+  <circle cx="44" cy="44" r="5" fill="#ee6b32"/>
+</svg>
