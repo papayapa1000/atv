@@ -1,14 +1,11 @@
 import Link from "next/link";
-import { SignOut } from "@phosphor-icons/react/ssr";
-import { logoutAdminAction } from "@/app/admin/actions";
 
 const adminNavItems = [
-  { label: "공지사항", href: "/admin/notices", enabled: false },
   { label: "예약게시판", href: "/admin/reservations", enabled: true },
-  { label: "자랑하기", href: "/admin/showcase", enabled: true },
   { label: "갤러리", href: "/admin/gallery", enabled: true },
-  { label: "주변 숙박", href: "/admin/stay", enabled: true },
   { label: "동영상", href: "/admin/videos", enabled: true },
+  { label: "자랑하기", href: "/admin/showcase", enabled: true },
+  { label: "주변 숙박", href: "/admin/stay", enabled: true },
 ] as const;
 
 type AdminTopbarProps = {
@@ -22,36 +19,22 @@ export function AdminTopbar({ active = "dashboard" }: AdminTopbarProps) {
         <Link href="/admin/dashboard" className="text-base font-semibold">
           제천 ATV & 수상레저 관리자
         </Link>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <nav aria-label="관리자 메뉴" className="flex gap-2 overflow-x-auto text-sm font-semibold text-foam/72">
-            {adminNavItems.map((item) =>
-              item.enabled ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active === item.href.split("/").at(-1) ? "page" : undefined}
-                  className={`spring shrink-0 border px-3 py-2 ${
-                    active === item.href.split("/").at(-1)
-                      ? "border-sun bg-sun text-deep"
-                      : "border-white/12 hover:border-foam hover:text-foam"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <span key={item.href} className="shrink-0 border border-white/8 px-3 py-2 text-foam/36">
-                  {item.label}
-                </span>
-              ),
-            )}
-          </nav>
-          <form action={logoutAdminAction}>
-            <button type="submit" className="spring inline-flex items-center gap-2 border border-white/14 px-3 py-2 text-sm font-semibold text-foam/72 hover:text-foam">
-              <SignOut aria-hidden="true" className="h-4 w-4" weight="bold" />
-              로그아웃
-            </button>
-          </form>
-        </div>
+        <nav aria-label="관리자 메뉴" className="flex gap-2 overflow-x-auto text-sm font-semibold text-foam/72">
+          {adminNavItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active === item.href.split("/").at(-1) ? "page" : undefined}
+              className={`spring shrink-0 border px-3 py-2 ${
+                active === item.href.split("/").at(-1)
+                  ? "border-sun bg-sun text-deep"
+                  : "border-white/12 hover:border-foam hover:text-foam"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </header>
   );
