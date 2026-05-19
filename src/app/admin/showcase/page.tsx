@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { ImageSquare, LinkSimple, Trash } from "@phosphor-icons/react/ssr";
+import { Trash } from "@phosphor-icons/react/ssr";
 import { deleteAdminShowcasePostAction } from "@/app/admin/actions";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { requireAdminSession } from "@/lib/admin/session";
@@ -47,7 +45,7 @@ export default async function AdminShowcasePage({ searchParams }: AdminShowcaseP
       <AdminTopbar active="showcase" />
       <section className="px-5 py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-[1440px]">
-          <div className="flex flex-col gap-4 border-b border-foreground/12 pb-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="border-b border-foreground/12 pb-8">
             <div>
               <p className="inline-flex border-b border-foreground/18 pb-2 text-xs font-semibold uppercase text-lake">
                 Showcase Admin
@@ -57,12 +55,6 @@ export default async function AdminShowcasePage({ searchParams }: AdminShowcaseP
                 방문객이 등록한 후기, 링크, 첨부 사진을 확인하고 필요 없는 게시글을 삭제합니다.
               </p>
             </div>
-            <Link
-              href="/showcase"
-              className="spring inline-flex w-fit items-center justify-center border border-foreground/14 bg-surface px-5 py-3 text-sm font-bold text-foreground/70 hover:border-lake hover:text-lake"
-            >
-              공개 게시판 보기
-            </Link>
           </div>
 
           {params.deleted ? (
@@ -81,65 +73,45 @@ export default async function AdminShowcasePage({ searchParams }: AdminShowcaseP
             <div className="mt-8 border border-sunset/25 bg-surface px-5 py-4 text-sm font-bold text-sunset">{loadError}</div>
           ) : null}
 
-          <section className="mt-8 min-h-[36rem] border border-foreground/12 bg-surface p-4 sm:p-5">
-            <div className="flex items-center justify-between gap-4 border-b border-foreground/10 pb-4">
-              <h2 className="text-xl font-semibold">등록된 자랑하기 게시글</h2>
-              <span className="numeric text-sm font-bold text-foreground/48">{posts.length}개</span>
+          <section className="mt-8 min-h-[36rem] border border-mist bg-white p-5 shadow-[0_24px_52px_-38px_rgba(7,59,58,0.42)] sm:p-6">
+            <div className="flex flex-col gap-2 border-b border-mist pb-5 sm:flex-row sm:items-end sm:justify-between">
+              <h2 className="text-2xl font-bold">자랑하기 게시판</h2>
+              <span className="numeric text-sm font-bold text-foreground/48">총 {posts.length}개</span>
             </div>
 
             {posts.length > 0 ? (
-              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <ul className="mt-2 divide-y divide-mist">
                 {posts.map((post) => (
-                  <article key={post.id} className="border border-foreground/12 bg-white">
-                    <div className="relative aspect-[16/10] overflow-hidden bg-mist">
-                      {post.imageUrls[0] ? (
-                        <Image src={post.imageUrls[0]} alt={post.title} fill sizes="(min-width: 1280px) 24vw, 50vw" className="object-cover" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-lake/70">
-                          <ImageSquare aria-hidden="true" className="h-10 w-10" weight="duotone" />
+                  <li key={post.id}>
+                    <div className="grid gap-3 px-1 py-4 text-sm sm:grid-cols-[minmax(0,1fr)_9rem_auto] sm:items-center sm:px-2">
+                      <div className="min-w-0">
+                        <h3 className="truncate text-base font-bold text-foreground">{post.title}</h3>
+                        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold text-lake/72">
+                          <span>{post.authorName}</span>
+                          <span>첨부 사진 {post.imageUrls.length}장</span>
+                          {post.linkUrl ? <span>링크 있음</span> : null}
                         </div>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold text-foreground/48">
-                        <span>{post.authorName}</span>
-                        <time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time>
+                        <p className="mt-2 line-clamp-1 text-sm leading-6 text-foreground/54">{post.content}</p>
                       </div>
-                      <h3 className="mt-3 text-base font-bold leading-6">{post.title}</h3>
-                      <p className="mt-2 text-xs font-bold text-lake">첨부 사진 {post.imageUrls.length}장</p>
-                      <p className="mt-3 line-clamp-3 text-sm leading-6 text-foreground/58">{post.content}</p>
-                      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        {post.linkUrl ? (
-                          <a
-                            href={post.linkUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="spring inline-flex items-center gap-2 text-sm font-bold text-lake hover:text-foreground"
-                          >
-                            <LinkSimple aria-hidden="true" className="h-4 w-4" weight="bold" />
-                            링크 열기
-                          </a>
-                        ) : (
-                          <span className="text-sm font-bold text-foreground/38">링크 없음</span>
-                        )}
-
-                        <form action={deleteAdminShowcasePostAction}>
-                          <input type="hidden" name="id" value={post.id} />
-                          <button
-                            type="submit"
-                            className="spring inline-flex items-center gap-2 border border-sunset/28 px-3 py-2 text-sm font-bold text-sunset hover:bg-sunset hover:text-white"
-                          >
-                            <Trash aria-hidden="true" className="h-4 w-4" weight="bold" />
-                            삭제
-                          </button>
-                        </form>
-                      </div>
+                      <time dateTime={post.createdAt} className="numeric text-xs font-bold text-foreground/48 sm:text-right sm:text-sm">
+                        {formatDate(post.createdAt)}
+                      </time>
+                      <form action={deleteAdminShowcasePostAction} className="sm:justify-self-end">
+                        <input type="hidden" name="id" value={post.id} />
+                        <button
+                          type="submit"
+                          className="spring inline-flex items-center gap-2 border border-sunset/28 px-3 py-2 text-sm font-bold text-sunset hover:bg-sunset hover:text-white"
+                        >
+                          <Trash aria-hidden="true" className="h-4 w-4" weight="bold" />
+                          삭제
+                        </button>
+                      </form>
                     </div>
-                  </article>
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
-              <div className="flex min-h-[30rem] flex-col items-center justify-center px-5 py-16 text-center">
+              <div className="flex min-h-[30rem] flex-col items-center justify-center border-y border-mist px-5 py-16 text-center">
                 <p className="text-lg font-semibold">등록된 자랑하기 게시글이 없습니다.</p>
                 <p className="mt-3 text-sm leading-7 text-ink-muted">공개 자랑하기 페이지에서 게시글을 작성하면 이곳에 표시됩니다.</p>
               </div>

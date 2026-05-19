@@ -1,14 +1,14 @@
 export type GalleryPostFormInput = {
   title?: FormDataEntryValue | string | null;
-  imageUrl?: FormDataEntryValue | string | null;
   content?: FormDataEntryValue | string | null;
+  imageFiles?: Array<FormDataEntryValue | File | null>;
   isPublished?: FormDataEntryValue | string | boolean | null;
 };
 
 export type NormalizedGalleryPostForm = {
   title: string;
-  imageUrl: string;
   content: string;
+  imageFiles: File[];
   isPublished: boolean;
 };
 
@@ -36,25 +36,41 @@ function isChecked(value: GalleryPostFormInput["isPublished"]) {
   return value === "on" || value === "true";
 }
 
-export function isAllowedGalleryImageSource(imageUrl: string) {
-  if (imageUrl.startsWith("/images/") && !imageUrl.includes("..")) {
-    return true;
+const allowedImageExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+const maxImageFileSize = 8 * 1024 * 1024;
+const maxImageFileCount = 8;
+
+function isFile(value: unknown): value is File {
+  return typeof File !== "undefined" && value instanceof File;
+}
+
+function hasImageFile(value: unknown): value is File {
+  return isFile(value) && value.size > 0;
+}
+
+function hasAllowedImageExtension(fileName: string) {
+  const lowerName = fileName.toLowerCase();
+  return allowedImageExtensions.some((extension) => lowerName.endsWith(extension));
+}
+
+function validateImageFile(file: File) {
+  if (file.size > maxImageFileSize) {
+    return "이미지 파일은 8MB 이하로 등록해 주세요.";
   }
 
-  try {
-    const url = new URL(imageUrl);
-
-    return url.protocol === "https:" && url.hostname === "tour.jecheon.go.kr" && url.pathname.startsWith("/tour/");
-  } catch {
-    return false;
+  if ((file.type && !allowedImageTypes.has(file.type)) || !hasAllowedImageExtension(file.name)) {
+    return "이미지 파일은 jpg, png, webp 형식만 등록해 주세요.";
   }
+
+  return "";
 }
 
 export function normalizeGalleryPostForm(input: GalleryPostFormInput): NormalizedGalleryPostForm {
   return {
     title: fieldToString(input.title),
-    imageUrl: fieldToString(input.imageUrl),
     content: fieldToString(input.content),
+    imageFiles: (input.imageFiles ?? []).filter(hasImageFile),
     isPublished: isChecked(input.isPublished),
   };
 }
@@ -66,10 +82,18 @@ export function validateGalleryPostForm(data: NormalizedGalleryPostForm): Galler
     errors.title = "제목은 2자 이상 80자 이하로 입력해 주세요.";
   }
 
-  if (!data.imageUrl) {
-    errors.imageUrl = "이미지 경로를 입력해 주세요.";
-  } else if (!isAllowedGalleryImageSource(data.imageUrl)) {
-    errors.imageUrl = "이미지는 /images/ 경로 또는 허용된 제천 관광 이미지 URL만 사용할 수 있습니다.";
+  if (data.imageFiles.length < 1) {
+    errors.imageFiles = "이미지를 1장 이상 첨부해 주세요.";
+  } else if (data.imageFiles.length > maxImageFileCount) {
+    errors.imageFiles = "이미지는 최대 8장까지 첨부할 수 있습니다.";
+  }
+
+  for (const file of data.imageFiles) {
+    const fileError = validateImageFile(file);
+    if (fileError) {
+      errors.imageFiles = fileError;
+      break;
+    }
   }
 
   if (data.content.length < 5 || data.content.length > 2000) {

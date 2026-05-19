@@ -217,7 +217,7 @@ export default function ActivitiesPage() {
               </div>
               <Link
                 href="/reservation"
-                className="spring mt-8 inline-flex items-center gap-2 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:bg-lake hover:text-white"
+                className="spring mt-8 inline-flex items-center gap-2 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:border-sunset hover:bg-sunset hover:text-white"
               >
                 예약 페이지 보기
                 <ArrowRight aria-hidden="true" className="h-4 w-4" weight="bold" />

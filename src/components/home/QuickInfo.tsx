@@ -148,8 +148,7 @@ export function QuickInfo() {
                     <Waves aria-hidden="true" className="h-6 w-6" weight="bold" />
                   </span>
                   <div>
-                    <p className="text-sm font-bold text-lake">추천 흐름</p>
-                    <h3 className="mt-1 text-3xl font-black">{featured.title}</h3>
+                    <h3 className="text-3xl font-black">{featured.title}</h3>
                   </div>
                 </div>
                 <p className="mt-6 break-keep-all text-base leading-8 text-ink-muted">{featured.note}</p>
@@ -157,13 +156,12 @@ export function QuickInfo() {
                   {featured.prices.map((price) => (
                     <div key={price} className="numeric flex items-center justify-between gap-4 py-4 text-sm font-extrabold">
                       <span>{price}</span>
-                      <span className="h-px w-10 shrink-0 bg-sun" />
                     </div>
                   ))}
                 </div>
                 <Link
                   href={featured.href}
-                  className="spring mt-7 inline-flex items-center gap-3 rounded-full bg-lake px-6 py-3 text-sm font-extrabold text-white hover:scale-[1.02] hover:bg-sun active:scale-[0.98]"
+                  className="spring mt-7 inline-flex items-center gap-3 rounded-full bg-lake px-6 py-3 text-sm font-extrabold text-white hover:scale-[1.02] hover:bg-forest hover:text-white active:scale-[0.98]"
                 >
                   선택 종목 자세히 보기
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-surface/20">
@@ -193,7 +191,7 @@ export function QuickInfo() {
             </div>
             <a
               href={phoneHref}
-              className="spring depth-panel-quiet group rounded-[2rem] border border-sun bg-sun p-7 text-white hover:scale-[1.02] hover:bg-lake active:scale-[0.98]"
+              className="spring depth-panel-quiet group rounded-[2rem] border border-sun bg-sun p-7 text-white hover:scale-[1.02] hover:border-sunset hover:bg-sunset hover:text-white active:scale-[0.98]"
             >
               <PhoneCall aria-hidden="true" className="h-7 w-7" weight="bold" />
               <p className="mt-5 text-2xl font-black">전화로 시간 확인</p>

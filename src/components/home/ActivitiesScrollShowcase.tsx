@@ -106,7 +106,7 @@ export function ActivitiesScrollShowcase({ items, phoneHref }: ActivitiesScrollS
             </a>
             <Link
               href="/reservation"
-              className="spring inline-flex items-center justify-center gap-2 border border-sun bg-sun px-4 py-2.5 text-sm font-bold text-white hover:bg-lake hover:text-white"
+              className="spring inline-flex items-center justify-center gap-2 border border-sun bg-sun px-4 py-2.5 text-sm font-bold text-white hover:border-sunset hover:bg-sunset hover:text-white"
             >
               온라인 예약문의
               <ArrowRight aria-hidden="true" className="h-4 w-4" weight="bold" />

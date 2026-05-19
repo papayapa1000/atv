@@ -87,7 +87,7 @@ function LockedReservationView({
         <button
           type="submit"
           disabled={pending}
-          className="spring mt-5 inline-flex w-full items-center justify-center gap-2 border border-sun bg-sun px-4 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:bg-lake hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
+          className="spring mt-5 inline-flex w-full items-center justify-center gap-2 border border-sun bg-sun px-4 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
         >
           <LockKey aria-hidden="true" className="h-4 w-4" weight="bold" />
           {pending ? "확인 중" : "확인"}
@@ -200,7 +200,7 @@ function OpenReservationView({
           <button
             type="submit"
             disabled={pending}
-            className="spring inline-flex h-[3.25rem] items-center justify-center gap-2 border border-sun bg-sun px-5 text-sm font-bold text-white hover:-translate-y-0.5 hover:bg-lake hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
+            className="spring inline-flex h-[3.25rem] items-center justify-center gap-2 border border-sun bg-sun px-5 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
           >
             <NotePencil aria-hidden="true" className="h-4 w-4" weight="bold" />
             {pending ? "저장 중" : "저장"}

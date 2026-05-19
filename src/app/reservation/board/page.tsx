@@ -65,7 +65,7 @@ export default async function ReservationBoardPage({ searchParams }: Reservation
             </div>
             <Link
               href="/reservation/write"
-              className="spring inline-flex w-fit items-center gap-3 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:bg-lake hover:text-white"
+              className="spring inline-flex w-fit items-center gap-3 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white"
             >
               <PencilSimpleLine aria-hidden="true" className="h-4 w-4" weight="bold" />
               예약글쓰기

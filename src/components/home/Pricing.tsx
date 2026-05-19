@@ -15,7 +15,7 @@ export function Pricing() {
             />
             <a
               href={phoneHref}
-              className="spring group mt-8 inline-flex items-center gap-3 border border-sun bg-sun px-6 py-3.5 text-base font-bold text-white hover:-translate-y-0.5 hover:bg-lake active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-sun focus:ring-offset-2 focus:ring-offset-background"
+              className="spring group mt-8 inline-flex items-center gap-3 border border-sun bg-sun px-6 py-3.5 text-base font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-sun focus:ring-offset-2 focus:ring-offset-background"
             >
               <PhoneCall aria-hidden="true" className="h-5 w-5" weight="bold" />
               {phoneNumber}

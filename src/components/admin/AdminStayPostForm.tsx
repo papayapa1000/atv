@@ -109,7 +109,7 @@ export function AdminStayPostForm() {
       <button
         type="submit"
         disabled={pending}
-        className="spring inline-flex items-center justify-center gap-3 border border-sun bg-sun px-6 py-3.5 text-sm font-bold text-white hover:-translate-y-0.5 hover:bg-lake disabled:cursor-not-allowed disabled:opacity-55"
+        className="spring inline-flex items-center justify-center gap-3 border border-sun bg-sun px-6 py-3.5 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
       >
         <PaperPlaneTilt aria-hidden="true" className="h-4 w-4" weight="bold" />
         {pending ? "등록 중" : "숙박 정보 등록"}

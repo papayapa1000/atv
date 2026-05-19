@@ -38,7 +38,7 @@ export function AdminLoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="spring inline-flex items-center justify-center gap-3 bg-sun px-5 py-3.5 text-sm font-semibold text-deep hover:-translate-y-0.5 hover:bg-foreground hover:text-foam disabled:cursor-not-allowed disabled:opacity-55"
+        className="spring inline-flex items-center justify-center gap-3 bg-sun px-5 py-3.5 text-sm font-semibold text-white hover:-translate-y-0.5 hover:bg-sunset hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
       >
         <SignIn aria-hidden="true" className="h-4 w-4" weight="bold" />
         {pending ? "확인 중" : "관리자 로그인"}

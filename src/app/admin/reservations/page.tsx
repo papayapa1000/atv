@@ -212,7 +212,7 @@ export default async function AdminReservationsPage({ searchParams }: AdminReser
 
                         <button
                           type="submit"
-                          className="spring inline-flex items-center justify-center gap-2 bg-sun px-4 py-2.5 text-sm font-semibold text-deep hover:-translate-y-0.5 hover:bg-foreground hover:text-foam"
+                          className="spring inline-flex items-center justify-center gap-2 bg-sun px-4 py-2.5 text-sm font-semibold text-white hover:-translate-y-0.5 hover:bg-sunset hover:text-white"
                         >
                           <NotePencil aria-hidden="true" className="h-4 w-4" weight="bold" />
                           저장

@@ -161,7 +161,7 @@ export default function WaterSkiAtvPage() {
                 href={`https://map.naver.com/p/search/${encodedAddress}`}
                 target="_blank"
                 rel="noreferrer"
-                className="spring inline-flex items-center gap-3 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:bg-lake hover:text-white active:scale-[0.98]"
+                className="spring inline-flex items-center gap-3 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white active:scale-[0.98]"
               >
                 <MapPin aria-hidden="true" className="h-4 w-4" weight="bold" />
                 네이버 지도

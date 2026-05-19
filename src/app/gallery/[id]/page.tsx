@@ -35,6 +35,8 @@ export default async function GalleryDetailPage({ params }: GalleryDetailPagePro
     notFound();
   }
 
+  const [mainImageUrl, ...extraImageUrls] = post.imageUrls;
+
   return (
     <main className="depth-warm min-h-screen bg-background text-foreground">
       <section className="px-5 py-12 lg:px-8 lg:py-18">
@@ -45,20 +47,39 @@ export default async function GalleryDetailPage({ params }: GalleryDetailPagePro
           </Link>
 
           <article className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-start xl:grid-cols-[minmax(0,1fr)_30rem]">
-            <div className="depth-panel-quiet relative aspect-[4/3] overflow-hidden border border-mist bg-mist lg:aspect-[16/10]">
-              <Image
-                src={post.imageUrl}
-                alt={post.title}
-                fill
-                priority
-                sizes="(min-width: 1280px) 60vw, (min-width: 1024px) 62vw, 100vw"
-                className="object-cover"
-              />
+            <div className="grid gap-3">
+              <div className="depth-panel-quiet relative aspect-[4/3] overflow-hidden border border-mist bg-mist lg:aspect-[16/10]">
+                <Image
+                  src={mainImageUrl}
+                  alt={post.title}
+                  fill
+                  priority
+                  sizes="(min-width: 1280px) 60vw, (min-width: 1024px) 62vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+
+              {extraImageUrls.length > 0 ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {extraImageUrls.map((imageUrl, index) => (
+                    <div key={imageUrl} className="relative aspect-[4/3] overflow-hidden border border-mist bg-mist">
+                      <Image
+                        src={imageUrl}
+                        alt={`${post.title} 첨부 이미지 ${index + 2}`}
+                        fill
+                        sizes="(min-width: 1024px) 30vw, 50vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
 
             <div className="border border-foreground/12 bg-surface/92 p-6 shadow-[0_24px_70px_rgba(36,64,67,0.10)] sm:p-8">
               <p className="inline-flex border-b border-foreground/18 pb-2 text-xs font-bold uppercase text-lake">Gallery Detail</p>
               <h1 className="mt-5 text-3xl font-bold leading-tight sm:text-5xl lg:text-4xl xl:text-5xl">{post.title}</h1>
+              <p className="numeric mt-4 text-xs font-bold text-lake">첨부 이미지 {post.imageUrls.length}장</p>
               <time dateTime={post.createdAt} className="numeric mt-5 block text-sm font-bold text-foreground/46">
                 {new Intl.DateTimeFormat("ko-KR", {
                   timeZone: "Asia/Seoul",

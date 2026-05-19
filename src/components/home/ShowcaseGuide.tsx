@@ -37,7 +37,7 @@ export function ShowcaseGuide({ showcasePage }: ShowcaseGuideProps) {
             </div>
             <Link
               href="/showcase/write"
-              className="spring inline-flex w-fit items-center justify-center gap-2 border border-lake bg-lake px-4 py-2.5 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sun hover:bg-sun hover:text-deep"
+              className="spring inline-flex w-fit items-center justify-center gap-2 border border-lake bg-lake px-4 py-2.5 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-forest hover:bg-forest hover:text-white"
             >
               <PencilSimpleLine aria-hidden="true" className="h-4 w-4" weight="bold" />
               글쓰기

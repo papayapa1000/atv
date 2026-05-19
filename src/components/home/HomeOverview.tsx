@@ -135,7 +135,7 @@ export function HomeOverview() {
           <p className="mt-5 text-base leading-8 text-ink-muted">
             예약 당일 미방문이 잦아 50,000원 선입금 방식으로 예약을 확정합니다. 일정 변경은 최소 1일 전 연락해 주세요.
           </p>
-          <a href={phoneHref} className="spring mt-8 inline-flex items-center gap-3 rounded-full border border-sun bg-sun px-6 py-3.5 text-sm font-extrabold text-white hover:scale-[1.02] hover:bg-lake hover:text-white">
+          <a href={phoneHref} className="spring mt-8 inline-flex items-center gap-3 rounded-full border border-sun bg-sun px-6 py-3.5 text-sm font-extrabold text-white hover:scale-[1.02] hover:border-sunset hover:bg-sunset hover:text-white">
             <PhoneCall aria-hidden="true" className="h-4 w-4" weight="bold" />
             {phoneNumber}
           </a>

@@ -6,6 +6,7 @@ import { issueAdminSession, requireAdminSession, clearAdminSession } from "@/lib
 import { deleteReservationPost, findAdminUser, updateReservationAdminFields } from "@/lib/admin/repository";
 import { normalizeAdminReservationUpdate, validateAdminReservationUpdate } from "@/lib/admin/validation";
 import { createGalleryPost } from "@/lib/gallery/repository";
+import { saveUploadedGalleryImages } from "@/lib/gallery/uploads";
 import { normalizeGalleryPostForm, validateGalleryPostForm } from "@/lib/gallery/validation";
 import { createReservationReply } from "@/lib/reservations/repository";
 import { deleteShowcasePost } from "@/lib/showcase/repository";
@@ -129,13 +130,12 @@ export async function createAdminGalleryPostAction(
 
   const normalized = normalizeGalleryPostForm({
     title: formData.get("title"),
-    imageUrl: formData.get("imageUrl"),
     content: formData.get("content"),
+    imageFiles: formData.getAll("imageFiles"),
     isPublished: formData.get("isPublished"),
   });
   const values = {
     title: normalized.title,
-    imageUrl: normalized.imageUrl,
     content: normalized.content,
     isPublished: normalized.isPublished ? "on" : "",
   };
@@ -150,7 +150,12 @@ export async function createAdminGalleryPostAction(
   }
 
   try {
-    const created = await createGalleryPost(result.data);
+    const { imageFiles, ...galleryData } = result.data;
+    const imageUrls = await saveUploadedGalleryImages(imageFiles);
+    const created = await createGalleryPost({
+      ...galleryData,
+      imageUrls,
+    });
 
     revalidatePath("/gallery");
     if (created?.id) {

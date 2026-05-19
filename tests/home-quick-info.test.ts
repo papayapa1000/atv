@@ -63,3 +63,17 @@ test("home quick info operating hours show open and close times", () => {
   assert.equal(source.includes("마감 시간"), true);
   assert.equal(source.includes("운영 시간은 07:00부터 19:00까지입니다."), true);
 });
+
+test("home quick info detail panel does not show the recommendation label", () => {
+  const source = readFileSync("src/components/home/QuickInfo.tsx", "utf8");
+
+  assert.equal(source.includes("추천 흐름"), false);
+  assert.equal(source.includes("선택 종목 자세히 보기"), true);
+});
+
+test("home quick info price rows do not show the orange divider tick", () => {
+  const source = readFileSync("src/components/home/QuickInfo.tsx", "utf8");
+
+  assert.equal(source.includes("h-px w-10 shrink-0 bg-sun"), false);
+  assert.equal(source.includes("featured.prices.map"), true);
+});
