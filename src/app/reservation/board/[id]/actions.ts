@@ -34,13 +34,13 @@ async function loadUnlockedReservation(
   const post = await getReservationDetail(id);
 
   if (!post) {
-    return lockedState(id, "?덉빟湲??李얠쓣 ???놁뒿?덈떎.");
+    return lockedState(id, "예약글을 찾을 수 없습니다.");
   }
 
   const isValid = await verifyPasswordHash(password, post.passwordHash);
 
   if (!isValid) {
-    return lockedState(id, "鍮꾨?踰덊샇媛 ?щ컮瑜댁? ?딆뒿?덈떎.");
+    return lockedState(id, "비밀번호가 올바르지 않습니다.");
   }
 
   const replies = mergeLegacyAdminNoteReply(post, await listReservationReplies(id));
@@ -65,11 +65,11 @@ export async function submitReservationDetailAction(
   const intent = getFormValue(formData, "intent");
 
   if (!id) {
-    return lockedState("", "?덉빟湲??李얠쓣 ???놁뒿?덈떎.");
+    return lockedState("", "예약글을 찾을 수 없습니다.");
   }
 
   if (!password) {
-    return lockedState(id, "鍮꾨?踰덊샇瑜??낅젰??二쇱꽭??");
+    return lockedState(id, "비밀번호를 입력해 주세요.");
   }
 
   if (intent !== "reply") {
@@ -90,7 +90,7 @@ export async function submitReservationDetailAction(
   if (!result.ok) {
     return {
       ...unlockedState,
-      message: result.errors.message ?? "?듦? ?댁슜???낅젰??二쇱꽭??",
+      message: result.errors.message ?? "답글 내용을 입력해 주세요.",
       replyError: true,
     };
   }
@@ -103,5 +103,5 @@ export async function submitReservationDetailAction(
 
   revalidatePath(`/reservation/board/${id}`);
 
-  return loadUnlockedReservation(id, password, "?듦?????λ릺?덉뒿?덈떎.");
+  return loadUnlockedReservation(id, password, "답글이 등록되었습니다.");
 }

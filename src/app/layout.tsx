@@ -19,15 +19,15 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "?쒖쿇 ATV & ?섏긽?덉? | 泥?뭾???덉? ?덉빟",
+  title: "제천 ATV & 수상레저 | 청풍호 레저 예약",
   description:
-    "泥?뭾?몄뿉???섏긽?ㅽ궎, ?⑥씠?щ낫?? 紐⑦꽣蹂댄듃, ATV, ?⑥껜 ?뚰겕?듭쓣 ??踰덉뿉 ?덉빟?섎뒗 ?쒖쿇 ?덉? ?덊럹?댁??낅땲??",
+    "청풍호에서 수상스키, 웨이크보드, 모터보트, ATV, 단체 워크숍을 한 번에 예약하는 제천 레저 홈페이지입니다.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "?쒖쿇 ATV & ?섏긽?덉?",
-    description: "泥?뭾???섏긽?덉?? ATV ?덉빟 ?덈궡",
+    title: "제천 ATV & 수상레저",
+    description: "청풍호 수상레저와 ATV 예약 안내",
   },
 };
 

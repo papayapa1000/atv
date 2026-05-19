@@ -38,7 +38,7 @@ export async function createReservationAction(
 
   if (!result.ok) {
     return {
-      message: "?낅젰 ?댁슜???ㅼ떆 ?뺤씤??二쇱꽭??",
+      message: "입력 내용을 다시 확인해 주세요.",
       errors: result.errors,
       values,
     };
@@ -50,7 +50,7 @@ export async function createReservationAction(
     console.error("Reservation insert failed", error);
 
     return {
-      message: "?덉빟 臾몄쓽 ???以?臾몄젣媛 諛쒖깮?덉뒿?덈떎. ?좎떆 ???ㅼ떆 ?쒕룄?섍굅???꾪솕濡?臾몄쓽??二쇱꽭??",
+      message: "예약 문의 저장 중 문제가 발생했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.",
       errors: {},
       values,
     };
