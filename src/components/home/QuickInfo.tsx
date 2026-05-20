@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, PhoneCall, Waves } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { phoneHref } from "@/lib/site-data";
 
@@ -93,12 +94,105 @@ const serviceTabs = [
   },
 ];
 
+type ServiceTab = (typeof serviceTabs)[number];
+
 const defaultServiceTitle = "플라이피쉬";
 const defaultService = serviceTabs.find((item) => item.title === defaultServiceTitle) ?? serviceTabs[0]!;
 
+function MobileQuickInfoDetail({ labelledBy, panelId, service }: { labelledBy: string; panelId: string; service: ServiceTab }) {
+  return (
+    <motion.div
+      id={panelId}
+      role="region"
+      aria-labelledby={labelledBy}
+      data-mobile-quick-info-panel
+      data-active="true"
+      data-motion-skip
+      initial={{ height: 0, opacity: 0, y: -12, scaleY: 0.96 }}
+      animate={{ height: "auto", opacity: 1, y: 0, scaleY: 1 }}
+      exit={{ height: 0, opacity: 0, y: -12, scaleY: 0.96 }}
+      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+      className="overflow-hidden lg:hidden"
+    >
+      <div className="origin-top rounded-[1.35rem] border border-sun/24 bg-surface p-4 shadow-[0_18px_34px_-28px_rgba(4,37,33,0.42)]">
+        <div className="flex items-start gap-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sun/12 text-sun">
+            <Waves aria-hidden="true" className="h-5 w-5" weight="bold" />
+          </span>
+          <div className="min-w-0">
+            <h3 className="text-xl font-black">{service.title}</h3>
+            <p className="mt-2 break-keep-all text-sm leading-7 text-ink-muted">{service.note}</p>
+          </div>
+        </div>
+        <div className="mt-4 divide-y divide-mist border-y border-mist">
+          {service.prices.map((price) => (
+            <div key={price} className="numeric flex items-center justify-between gap-4 py-3 text-sm font-extrabold">
+              <span>{price}</span>
+            </div>
+          ))}
+        </div>
+        <Link
+          href={service.href}
+          className="spring mt-4 inline-flex w-full items-center justify-between gap-3 rounded-full bg-lake px-5 py-3 text-sm font-extrabold text-white hover:bg-forest hover:text-white active:scale-[0.98]"
+        >
+          선택 종목 자세히 보기
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-surface/20">
+            <ArrowRight aria-hidden="true" className="h-4 w-4" weight="bold" />
+          </span>
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+
+function DesktopQuickInfoPanel({ service }: { service: ServiceTab }) {
+  return (
+    <div className="bezel depth-panel hidden rounded-[2rem] bg-surface/72 p-1.5 lg:col-span-7 lg:block">
+      <div id="quick-info-desktop-panel" aria-live="polite" className="depth-surface grid overflow-hidden rounded-[1.65rem] border border-mist bg-surface md:grid-cols-[0.92fr_1.08fr]">
+        <div className="p-7 sm:p-9">
+          <div className="flex items-center gap-3">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-sun/12 text-sun">
+              <Waves aria-hidden="true" className="h-6 w-6" weight="bold" />
+            </span>
+            <div>
+              <h3 className="text-3xl font-black">{service.title}</h3>
+            </div>
+          </div>
+          <p className="mt-6 break-keep-all text-base leading-8 text-ink-muted">{service.note}</p>
+          <div className="mt-7 divide-y divide-mist border-y border-mist">
+            {service.prices.map((price) => (
+              <div key={price} className="numeric flex items-center justify-between gap-4 py-4 text-sm font-extrabold">
+                <span>{price}</span>
+              </div>
+            ))}
+          </div>
+          <Link
+            href={service.href}
+            className="spring mt-7 inline-flex items-center gap-3 rounded-full bg-lake px-6 py-3 text-sm font-extrabold text-white hover:scale-[1.02] hover:bg-forest hover:text-white active:scale-[0.98]"
+          >
+            선택 종목 자세히 보기
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-surface/20">
+              <ArrowRight aria-hidden="true" className="h-4 w-4" weight="bold" />
+            </span>
+          </Link>
+        </div>
+        <div className="image-lift relative min-h-[320px] bg-mist md:min-h-full">
+          <Image src={service.image} alt={`${service.title} 이용 장면`} fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function QuickInfo() {
   const [selectedTitle, setSelectedTitle] = useState(defaultServiceTitle);
+  const [openMobileTitle, setOpenMobileTitle] = useState<string | null>(defaultServiceTitle);
   const featured = serviceTabs.find((item) => item.title === selectedTitle) ?? defaultService;
+
+  const handleServiceClick = (title: string) => {
+    setSelectedTitle(title);
+    setOpenMobileTitle((currentTitle) => (currentTitle === title ? null : title));
+  };
 
   return (
     <section className="depth-mint bg-foam px-5 py-24 text-foreground lg:px-8 lg:py-32">
@@ -114,66 +208,48 @@ export function QuickInfo() {
                 강습, 단체 놀이기구, 보트 투어, ATV는 준비 시간과 동선이 다릅니다. 아래에서 목적을 고른 뒤 바로 상담하면 가장 빠릅니다.
               </p>
 
-              <div role="tablist" aria-label="즐길거리 목록" className="mt-8 grid max-h-[18rem] gap-2 overflow-y-auto pr-2 [scrollbar-width:thin]">
-                {serviceTabs.map((item, index) => (
-                  <button
-                    key={item.title}
-                    type="button"
-                    role="tab"
-                    aria-selected={item.title === featured.title}
-                    aria-controls="quick-info-panel"
-                    onClick={() => setSelectedTitle(item.title)}
-                    className={`spring group grid grid-cols-[2.5rem_1fr_auto] items-center gap-3 rounded-full border px-3 py-3 text-left text-sm font-extrabold focus:outline-none focus:ring-2 focus:ring-lake/30 ${
-                      item.title === featured.title
-                        ? "border-sun bg-sun text-white shadow-[0_0_30px_rgba(225,93,50,0.24)]"
-                        : "border-mist bg-foam text-foreground/72 hover:border-lake/26 hover:bg-surface-muted hover:text-lake"
-                    }`}
-                  >
-                    <span className="numeric grid h-8 w-8 place-items-center rounded-full bg-surface/24 text-xs">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    {item.title}
-                    <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" weight="bold" />
-                  </button>
-                ))}
+              <div aria-label="종목별 코스 목록" className="mt-8 grid gap-2 [scrollbar-width:thin] lg:max-h-[18rem] lg:overflow-y-auto lg:pr-2">
+                {serviceTabs.map((item, index) => {
+                  const isSelected = item.title === featured.title;
+                  const isMobileOpen = item.title === openMobileTitle;
+                  const activeButtonClasses = "border-sun bg-sun text-white shadow-[0_0_30px_rgba(225,93,50,0.24)]";
+                  const idleButtonClasses = "border-mist bg-foam text-foreground/72 hover:border-lake/26 hover:bg-surface-muted hover:text-lake";
+                  const triggerId = `quick-info-trigger-${index}`;
+                  const panelId = `quick-info-mobile-panel-${index}`;
+
+                  return (
+                    <div key={item.title} className="grid gap-2">
+                      <button
+                        id={triggerId}
+                        type="button"
+                        aria-expanded={isMobileOpen}
+                        aria-controls={panelId}
+                        onClick={() => handleServiceClick(item.title)}
+                        className={`spring group grid grid-cols-[2.5rem_1fr_auto] items-center gap-3 rounded-full border px-3 py-3 text-left text-sm font-extrabold focus:outline-none focus:ring-2 focus:ring-lake/30 ${
+                          isMobileOpen ? activeButtonClasses : idleButtonClasses
+                        } ${isSelected ? "lg:border-sun lg:bg-sun lg:text-white lg:shadow-[0_0_30px_rgba(225,93,50,0.24)] lg:hover:border-sun lg:hover:bg-sun lg:hover:text-white" : ""}`}
+                      >
+                        <span className="numeric grid h-8 w-8 place-items-center rounded-full bg-surface/24 text-xs">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span>{item.title}</span>
+                        <ArrowRight
+                          aria-hidden="true"
+                          className={`h-4 w-4 transition-transform duration-300 ${isMobileOpen ? "rotate-90 lg:rotate-0" : ""}`}
+                          weight="bold"
+                        />
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {isMobileOpen ? <MobileQuickInfoDetail labelledBy={triggerId} panelId={panelId} service={item} /> : null}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          <div className="bezel depth-panel rounded-[2rem] bg-surface/72 p-1.5 lg:col-span-7">
-            <div id="quick-info-panel" role="tabpanel" className="depth-surface grid overflow-hidden rounded-[1.65rem] border border-mist bg-surface md:grid-cols-[0.92fr_1.08fr]">
-              <div className="p-7 sm:p-9">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-sun/12 text-sun">
-                    <Waves aria-hidden="true" className="h-6 w-6" weight="bold" />
-                  </span>
-                  <div>
-                    <h3 className="text-3xl font-black">{featured.title}</h3>
-                  </div>
-                </div>
-                <p className="mt-6 break-keep-all text-base leading-8 text-ink-muted">{featured.note}</p>
-                <div className="mt-7 divide-y divide-mist border-y border-mist">
-                  {featured.prices.map((price) => (
-                    <div key={price} className="numeric flex items-center justify-between gap-4 py-4 text-sm font-extrabold">
-                      <span>{price}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  href={featured.href}
-                  className="spring mt-7 inline-flex items-center gap-3 rounded-full bg-lake px-6 py-3 text-sm font-extrabold text-white hover:scale-[1.02] hover:bg-forest hover:text-white active:scale-[0.98]"
-                >
-                  선택 종목 자세히 보기
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-surface/20">
-                    <ArrowRight aria-hidden="true" className="h-4 w-4" weight="bold" />
-                  </span>
-                </Link>
-              </div>
-              <div className="image-lift relative min-h-[320px] bg-mist md:min-h-full">
-                <Image src={featured.image} alt={`${featured.title} 이용 장면`} fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" />
-              </div>
-            </div>
-          </div>
+          <DesktopQuickInfoPanel service={featured} />
 
           <div className="grid gap-5 lg:col-span-7 sm:grid-cols-2">
             <div className="depth-surface depth-panel-quiet rounded-[2rem] border border-mist bg-surface p-7">
