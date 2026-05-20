@@ -36,13 +36,13 @@ export default function ReservationWritePage() {
               </div>
             </div>
 
-            <div className="border border-sun/30 bg-sun/12 p-5 text-foreground shadow-[0_16px_30px_-24px_rgba(185,79,49,0.62)] sm:p-6">
-              <p className="text-sm font-bold text-sunset">전화문의</p>
-              <a href={phoneHref} className="spring mt-3 inline-flex items-center gap-3 text-xl font-bold text-lake hover:text-sunset">
+            <div className="border border-sun bg-sun p-5 text-white shadow-[0_18px_34px_-24px_rgba(185,79,49,0.78)] sm:p-6">
+              <p className="text-sm font-bold text-white/82">전화문의</p>
+              <a href={phoneHref} className="spring mt-3 inline-flex items-center gap-3 text-xl font-bold text-white hover:text-white/82">
                 <PhoneCall aria-hidden="true" className="h-5 w-5" weight="bold" />
                 {phoneNumber}
               </a>
-              <p className="mt-3 text-xs leading-6 text-foreground/58">단체 예약, 패키지 구성, 당일 날씨 확인은 유선 문의가 가장 빠릅니다.</p>
+              <p className="mt-3 text-xs leading-6 text-white/78">단체 예약, 패키지 구성, 당일 날씨 확인은 유선 문의가 가장 빠릅니다.</p>
             </div>
           </aside>
         </div>

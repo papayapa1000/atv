@@ -87,7 +87,6 @@ export async function VideoGuide({ page }: VideoGuideProps) {
             as="h1"
             eyebrow="Video"
             title="현장의 속도감을 영상으로 먼저 확인합니다"
-            description="유튜브 영상과 현장 촬영 파일을 한곳에서 확인할 수 있습니다. 목록에서는 썸네일만 보여주고 상세 화면에서 영상을 재생합니다."
           />
         </div>
 

@@ -45,6 +45,21 @@ test("allows up to ten stay images", () => {
   });
 });
 
+test("allows stay edit validation without replacement image files", () => {
+  const result = validateStayPostForm(
+    {
+      title: "숙박 정보 수정",
+      price: "문의",
+      content: "기존 숙박 이미지를 유지하면서 설명만 수정합니다.",
+      isPublished: true,
+      imageFiles: [],
+    },
+    { requireImages: false },
+  );
+
+  assert.equal(result.ok, true);
+});
+
 test("rejects missing and excessive stay images", () => {
   const missing = validateStayPostForm({
     title: "숙박 안내",

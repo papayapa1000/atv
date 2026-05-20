@@ -172,10 +172,21 @@ export async function createShowcasePost(input: CreateShowcasePostInput) {
 
 export async function deleteShowcasePost(id: string) {
   try {
-    await supabaseRest<null>(`showcase_posts?id=eq.${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    });
+    const rows = await supabaseRest<SupabaseShowcasePostRow[]>(
+      `showcase_posts?select=${showcaseSelect}&id=eq.${encodeURIComponent(id)}`,
+      {
+        method: "DELETE",
+        headers: {
+          Prefer: "return=representation",
+        },
+      },
+    );
+
+    return rows[0] ? toShowcasePost(rows[0]) : null;
   } catch {
+    const post = await getLocalShowcasePost(id);
     await deleteLocalShowcasePost(id);
+
+    return post;
   }
 }

@@ -228,6 +228,25 @@ a {
   will-change: transform;
 }
 
+.home-hero-stage {
+  transform-origin: 50% 0;
+  overflow-anchor: none;
+}
+
+.home-hero-stage.reveal {
+  animation: none;
+}
+
+.home-hero-light-sweep {
+  position: absolute;
+  inset: -18% -34%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 18%, rgba(255, 250, 242, 0.68) 42%, rgba(230, 93, 50, 0.24) 52%, transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+
 .reveal {
   animation: fade-in-up 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--delay, 0ms);
@@ -245,6 +264,60 @@ a {
   border-radius: 999px;
   background: rgba(225, 93, 50, 0.12);
   color: var(--sun);
+}
+
+.page-motion-shell {
+  overflow-x: clip;
+  isolation: isolate;
+}
+
+.page-motion-debug {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 500;
+  display: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(16, 34, 30, 0.9);
+  padding: 0.5rem 0.75rem;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 18px 44px -28px rgba(7, 59, 58, 0.72);
+  pointer-events: none;
+}
+
+.page-motion-shell[data-motion-debug="true"] .page-motion-debug {
+  display: inline-flex;
+}
+
+.page-motion-view {
+  transform-origin: 50% 0;
+  overflow-anchor: none;
+}
+
+.page-motion-view > main {
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
+}
+
+.page-motion-shell[data-motion-profile="activity"] .page-motion-view {
+  transform-origin: 0 50%;
+}
+
+.page-motion-shell[data-motion-profile="collection"] .page-motion-view {
+  transform-origin: 50% 12%;
+}
+
+.page-motion-view main > section,
+.page-motion-view main > article,
+.page-motion-view main > div,
+.page-motion-view main > form,
+.page-motion-view main .image-lift,
+.page-motion-view main [data-motion-media] {
+  will-change: transform, opacity;
 }
 
 @keyframes fade-in-up {
@@ -277,5 +350,9 @@ a {
 
   .hero-kenburns {
     animation-name: none !important;
+  }
+
+  .page-motion-shell {
+    scroll-behavior: auto !important;
   }
 }

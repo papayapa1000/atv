@@ -1,6 +1,7 @@
 import "server-only";
 
 import { supabaseRest } from "@/lib/supabase/rest";
+import { normalizeGalleryImageUrls, serializeLegacyGalleryImageUrl } from "./image-urls";
 import { normalizeGalleryPage, type GalleryPageMeta } from "./pagination";
 import type { NormalizedGalleryPostForm } from "./validation";
 
@@ -10,7 +11,7 @@ export type SupabaseGalleryPostRow = {
   updated_at?: string;
   title: string;
   image_url: string;
-  image_urls: string[] | null;
+  image_urls?: string[] | null;
   content: string;
   is_published: boolean;
   sort_order: number | null;
@@ -35,7 +36,12 @@ export type CreateGalleryPostInput = Omit<NormalizedGalleryPostForm, "imageFiles
   imageUrls: string[];
 };
 
+export type UpdateGalleryPostInput = CreateGalleryPostInput & {
+  id: string;
+};
+
 const gallerySelect = "id,created_at,title,image_url,image_urls,content,is_published,sort_order";
+const legacyGallerySelect = "id,created_at,title,image_url,content,is_published,sort_order";
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export const fallbackGalleryPosts: GalleryPost[] = [
@@ -142,7 +148,7 @@ export const fallbackGalleryPosts: GalleryPost[] = [
 ];
 
 function toGalleryPost(row: SupabaseGalleryPostRow): GalleryPost {
-  const imageUrls = row.image_urls?.length ? row.image_urls : [row.image_url];
+  const imageUrls = normalizeGalleryImageUrls(row.image_url, row.image_urls);
 
   return {
     id: row.id,
@@ -169,6 +175,72 @@ function fallbackGalleryPage(rawPage: string | number | null | undefined, pageSi
   };
 }
 
+function isMissingGalleryImageUrlsColumnError(error: unknown) {
+  return error instanceof Error && error.message.includes("gallery_posts") && error.message.includes("image_urls");
+}
+
+async function listLegacyGalleryPosts(): Promise<GalleryPost[]> {
+  const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
+    `gallery_posts?select=${legacyGallerySelect}&is_published=eq.true&order=sort_order.asc,created_at.desc`,
+  );
+
+  return rows.length > 0 ? rows.map(toGalleryPost) : fallbackGalleryPosts;
+}
+
+async function listLegacyAdminGalleryPosts(limit: number): Promise<GalleryPost[]> {
+  const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
+    `gallery_posts?select=${legacyGallerySelect}&order=created_at.desc&limit=${limit}`,
+  );
+
+  return rows.map(toGalleryPost);
+}
+
+async function getLegacyGalleryPost(id: string) {
+  const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
+    `gallery_posts?select=${legacyGallerySelect}&id=eq.${encodeURIComponent(id)}&is_published=eq.true&limit=1`,
+  );
+
+  return rows[0] ? toGalleryPost(rows[0]) : null;
+}
+
+async function createLegacyGalleryPost(input: CreateGalleryPostInput) {
+  const [created] = await supabaseRest<SupabaseGalleryPostRow[]>("gallery_posts?select=id", {
+    method: "POST",
+    headers: {
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify({
+      title: input.title,
+      image_url: serializeLegacyGalleryImageUrl(input.imageUrls),
+      content: input.content,
+      is_published: input.isPublished,
+      sort_order: 0,
+    }),
+  });
+
+  return created;
+}
+
+async function updateLegacyGalleryPost(input: UpdateGalleryPostInput) {
+  const [updated] = await supabaseRest<Array<{ id: string }>>(
+    `gallery_posts?select=id&id=eq.${encodeURIComponent(input.id)}`,
+    {
+      method: "PATCH",
+      headers: {
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        title: input.title,
+        image_url: serializeLegacyGalleryImageUrl(input.imageUrls),
+        content: input.content,
+        is_published: input.isPublished,
+      }),
+    },
+  );
+
+  return updated;
+}
+
 export async function listGalleryPosts(): Promise<GalleryPost[]> {
   try {
     const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
@@ -176,7 +248,11 @@ export async function listGalleryPosts(): Promise<GalleryPost[]> {
     );
 
     return rows.length > 0 ? rows.map(toGalleryPost) : fallbackGalleryPosts;
-  } catch {
+  } catch (error) {
+    if (isMissingGalleryImageUrlsColumnError(error)) {
+      return listLegacyGalleryPosts();
+    }
+
     return fallbackGalleryPosts;
   }
 }
@@ -198,7 +274,25 @@ export async function listGalleryPostsPage(rawPage?: string | number | null, pag
       ...meta,
       items: rows.map(toGalleryPost),
     };
-  } catch {
+  } catch (error) {
+    if (isMissingGalleryImageUrlsColumnError(error)) {
+      const countRows = await supabaseRest<Array<{ id: string }>>("gallery_posts?select=id&is_published=eq.true&limit=10000");
+
+      if (countRows.length === 0) {
+        return fallbackGalleryPage(rawPage, pageSize);
+      }
+
+      const meta = normalizeGalleryPage(rawPage, countRows.length, pageSize);
+      const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
+        `gallery_posts?select=${legacyGallerySelect}&is_published=eq.true&order=sort_order.asc,created_at.desc&limit=${meta.pageSize}&offset=${meta.offset}`,
+      );
+
+      return {
+        ...meta,
+        items: rows.map(toGalleryPost),
+      };
+    }
+
     return fallbackGalleryPage(rawPage, pageSize);
   }
 }
@@ -214,35 +308,99 @@ export async function getGalleryPost(id: string): Promise<GalleryPost | null> {
     );
 
     return rows[0] ? toGalleryPost(rows[0]) : null;
-  } catch {
+  } catch (error) {
+    if (isMissingGalleryImageUrlsColumnError(error)) {
+      return getLegacyGalleryPost(id);
+    }
+
     return fallbackById(id);
   }
 }
 
 export async function listAdminGalleryPosts(limit = 100): Promise<GalleryPost[]> {
   const safeLimit = Math.min(Math.max(limit, 1), 200);
-  const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
-    `gallery_posts?select=${gallerySelect}&order=created_at.desc&limit=${safeLimit}`,
-  );
 
-  return rows.map(toGalleryPost);
+  try {
+    const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
+      `gallery_posts?select=${gallerySelect}&order=created_at.desc&limit=${safeLimit}`,
+    );
+
+    return rows.map(toGalleryPost);
+  } catch (error) {
+    if (isMissingGalleryImageUrlsColumnError(error)) {
+      return listLegacyAdminGalleryPosts(safeLimit);
+    }
+
+    throw error;
+  }
 }
 
 export async function createGalleryPost(input: CreateGalleryPostInput) {
-  const [created] = await supabaseRest<SupabaseGalleryPostRow[]>("gallery_posts?select=id", {
-    method: "POST",
-    headers: {
-      Prefer: "return=representation",
-    },
-    body: JSON.stringify({
-      title: input.title,
-      image_url: input.imageUrls[0],
-      image_urls: input.imageUrls,
-      content: input.content,
-      is_published: input.isPublished,
-      sort_order: 0,
-    }),
-  });
+  try {
+    const [created] = await supabaseRest<SupabaseGalleryPostRow[]>("gallery_posts?select=id", {
+      method: "POST",
+      headers: {
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        title: input.title,
+        image_url: input.imageUrls[0],
+        image_urls: input.imageUrls,
+        content: input.content,
+        is_published: input.isPublished,
+        sort_order: 0,
+      }),
+    });
 
-  return created;
+    return created;
+  } catch (error) {
+    if (isMissingGalleryImageUrlsColumnError(error)) {
+      return createLegacyGalleryPost(input);
+    }
+
+    throw error;
+  }
+}
+
+export async function updateGalleryPost(input: UpdateGalleryPostInput) {
+  try {
+    const [updated] = await supabaseRest<Array<{ id: string }>>(
+      `gallery_posts?select=id&id=eq.${encodeURIComponent(input.id)}`,
+      {
+        method: "PATCH",
+        headers: {
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify({
+          title: input.title,
+          image_url: input.imageUrls[0],
+          image_urls: input.imageUrls,
+          content: input.content,
+          is_published: input.isPublished,
+        }),
+      },
+    );
+
+    return updated;
+  } catch (error) {
+    if (isMissingGalleryImageUrlsColumnError(error)) {
+      return updateLegacyGalleryPost(input);
+    }
+
+    throw error;
+  }
+}
+
+export async function deleteGalleryPost(id: string) {
+  const rows = await supabaseRest<SupabaseGalleryPostRow[]>(
+    `gallery_posts?select=${gallerySelect}&id=eq.${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+      headers: {
+        Prefer: "return=representation",
+      },
+    },
+  );
+
+  return rows[0] ? toGalleryPost(rows[0]) : null;
 }

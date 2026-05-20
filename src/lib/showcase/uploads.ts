@@ -1,39 +1,24 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { compressUploadedImageForStorage } from "@/lib/images/compression";
+import { uploadSupabaseStorageObject } from "@/lib/supabase/storage";
 
-const extensionByMimeType: Record<string, string> = {
-  "image/jpeg": ".jpg",
-  "image/png": ".png",
-  "image/webp": ".webp",
-};
+const defaultShowcaseImagesBucket = "showcase-images";
 
-const allowedExtensions = new Set([".jpg", ".jpeg", ".png", ".webp"]);
-
-function resolveUploadExtension(file: File) {
-  const originalExtension = path.extname(file.name).toLowerCase();
-
-  if (allowedExtensions.has(originalExtension)) {
-    return originalExtension;
-  }
-
-  return extensionByMimeType[file.type] ?? ".jpg";
+function getShowcaseImagesBucket() {
+  return process.env.SUPABASE_SHOWCASE_IMAGES_BUCKET || defaultShowcaseImagesBucket;
 }
 
 export async function saveUploadedShowcaseImage(file: File) {
-  const uploadDirectory = path.join(process.cwd(), "public", "uploads", "showcase");
-  await mkdir(uploadDirectory, { recursive: true });
-
-  const extension = resolveUploadExtension(file);
-  const fileName = `${Date.now()}-${randomUUID()}${extension}`;
-  const filePath = path.join(uploadDirectory, fileName);
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(filePath, bytes);
-
-  return `/uploads/showcase/${fileName}`;
+  const image = await compressUploadedImageForStorage(file);
+  const fileName = `${Date.now()}-${randomUUID()}${image.extension}`;
+  return uploadSupabaseStorageObject({
+    bucket: getShowcaseImagesBucket(),
+    objectPath: fileName,
+    body: image.body,
+    contentType: image.contentType,
+  });
 }
 
 export async function saveUploadedShowcaseImages(files: File[]) {

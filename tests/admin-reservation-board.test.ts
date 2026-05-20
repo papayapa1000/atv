@@ -35,10 +35,11 @@ test("admin reservation posts can be deleted from the reservation management pag
   assert.equal(repositorySource.includes("export async function deleteReservationPost"), true);
   assert.equal(pageSource.includes("AdminReservationDeleteForm"), true);
   assert.equal(deleteFormSource.includes('"use client"'), true);
-  assert.equal(deleteFormSource.includes("window.confirm"), true);
+  assert.equal(deleteFormSource.includes("AdminDeleteConfirmButton"), true);
+  assert.equal(deleteFormSource.includes("window.confirm"), false);
   assert.equal(deleteFormSource.includes("정말 이 예약글을 삭제하시겠습니까?"), true);
   assert.equal(deleteFormSource.includes("예약글 삭제"), true);
-  assert.equal(deleteFormSource.includes("Trash"), true);
+  assert.equal(deleteFormSource.includes("예약글 삭제"), true);
 });
 
 test("reservation comments render as a single chronological stream", () => {

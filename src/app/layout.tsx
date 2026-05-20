@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Outfit } from "next/font/google";
 import { Footer } from "@/components/home/Footer";
 import { Header } from "@/components/home/Header";
+import { PageMotion } from "@/components/motion/PageMotion";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -40,7 +41,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${outfit.variable} ${jetBrainsMono.variable}`}>
         <Header />
-        {children}
+        <PageMotion>{children}</PageMotion>
         <Footer />
       </body>
     </html>

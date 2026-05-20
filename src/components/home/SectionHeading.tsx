@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 type SectionHeadingProps = {
   eyebrow: string;
   title: ReactNode;
-  description: ReactNode;
+  description?: ReactNode;
   align?: "left" | "center";
   tone?: "light" | "dark";
   as?: "h1" | "h2";
@@ -29,9 +29,11 @@ export function SectionHeading({ eyebrow, title, description, align = "left", to
       >
         {title}
       </HeadingTag>
-      <p className={`text-pretty mt-5 max-w-2xl text-base leading-8 sm:text-lg ${isDark ? "text-foam/72" : "text-ink-muted"}`}>
-        {description}
-      </p>
+      {description ? (
+        <p className={`text-pretty mt-5 max-w-2xl text-base leading-8 sm:text-lg ${isDark ? "text-foam/72" : "text-ink-muted"}`}>
+          {description}
+        </p>
+      ) : null}
     </div>
   );
 }

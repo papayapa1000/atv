@@ -4,8 +4,10 @@ import { supabaseRest } from "@/lib/supabase/rest";
 import {
   countLocalStayPosts,
   createLocalStayPost,
+  deleteLocalStayPost,
   getLocalStayPost,
   listLocalStayPosts,
+  updateLocalStayPost,
 } from "./local-store";
 import { normalizeStayPage, type StayPageMeta } from "./pagination";
 import type { NormalizedStayPostForm } from "./validation";
@@ -35,6 +37,10 @@ export type StayPost = {
 
 export type CreateStayPostInput = Omit<NormalizedStayPostForm, "imageFiles"> & {
   imageUrls: string[];
+};
+
+export type UpdateStayPostInput = CreateStayPostInput & {
+  id: string;
 };
 
 export type StayPostPage = StayPageMeta & {
@@ -141,5 +147,55 @@ export async function createStayPost(input: CreateStayPostInput) {
     return created;
   } catch {
     return createLocalStayPost(input);
+  }
+}
+
+export async function updateStayPost(input: UpdateStayPostInput) {
+  try {
+    const [updated] = await supabaseRest<Array<{ id: string }>>(
+      `stay_posts?select=id&id=eq.${encodeURIComponent(input.id)}`,
+      {
+        method: "PATCH",
+        headers: {
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify({
+          title: input.title,
+          price: input.price,
+          content: input.content,
+          image_urls: input.imageUrls,
+          is_published: input.isPublished,
+        }),
+      },
+    );
+
+    return updated ?? updateLocalStayPost(input);
+  } catch {
+    return updateLocalStayPost(input);
+  }
+}
+
+export async function deleteStayPost(id: string) {
+  try {
+    const deleted = await supabaseRest<SupabaseStayPostRow[]>(`stay_posts?select=${staySelect}&id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: {
+        Prefer: "return=representation",
+      },
+    });
+
+    if (!deleted?.length) {
+      const [localPost] = await listLocalStayPosts(200, 0, true).then((posts) => posts.filter((post) => post.id === id));
+      await deleteLocalStayPost(id);
+
+      return localPost ?? null;
+    }
+
+    return toStayPost(deleted[0]);
+  } catch {
+    const [localPost] = await listLocalStayPosts(200, 0, true).then((posts) => posts.filter((post) => post.id === id));
+    await deleteLocalStayPost(id);
+
+    return localPost ?? null;
   }
 }

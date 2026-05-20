@@ -91,6 +91,22 @@ test("rejects showcase image files larger than 8MB", () => {
   }
 });
 
+test("rejects unsupported showcase image file types", () => {
+  const svgImage = new File(["<svg />"], "review.svg", { type: "image/svg+xml" });
+  const result = validateShowcasePostForm({
+    authorName: "작성자",
+    title: "지원하지 않는 사진",
+    content: "지원하지 않는 사진 형식 검증입니다.",
+    linkUrl: "",
+    imageFiles: [svgImage],
+  });
+
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.match(result.errors.imageFiles ?? "", /jpg, png, webp/);
+  }
+});
+
 test("normalizes showcase board pagination to twelve rows", () => {
   assert.deepEqual(normalizeShowcasePage("2", 25), {
     page: 2,

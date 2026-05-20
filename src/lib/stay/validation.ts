@@ -18,6 +18,10 @@ export type StayPostValidationResult =
   | { ok: true; data: NormalizedStayPostForm }
   | { ok: false; errors: Record<string, string> };
 
+export type StayPostValidationOptions = {
+  requireImages?: boolean;
+};
+
 const allowedImageExtensions = [".jpg", ".jpeg", ".png", ".webp"];
 const allowedImageMimeTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 const maxImageFileSize = 8 * 1024 * 1024;
@@ -79,8 +83,12 @@ export function normalizeStayPostForm(input: StayPostFormInput): NormalizedStayP
   };
 }
 
-export function validateStayPostForm(data: NormalizedStayPostForm): StayPostValidationResult {
+export function validateStayPostForm(
+  data: NormalizedStayPostForm,
+  options: StayPostValidationOptions = {},
+): StayPostValidationResult {
   const errors: Record<string, string> = {};
+  const requireImages = options.requireImages ?? true;
 
   if (data.title.length < 2 || data.title.length > 80) {
     errors.title = "제목은 2자 이상 80자 이하로 입력해 주세요.";
@@ -94,7 +102,7 @@ export function validateStayPostForm(data: NormalizedStayPostForm): StayPostVali
     errors.content = "본문은 5자 이상 4,000자 이하로 입력해 주세요.";
   }
 
-  if (data.imageFiles.length < 1) {
+  if (requireImages && data.imageFiles.length < 1) {
     errors.imageFiles = "숙박 이미지를 1장 이상 첨부해 주세요.";
   } else if (data.imageFiles.length > maxImageFileCount) {
     errors.imageFiles = "이미지는 최대 10장까지 첨부할 수 있습니다.";

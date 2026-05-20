@@ -88,7 +88,6 @@ export async function GalleryPreview({ page }: GalleryPreviewProps) {
             as="h1"
             eyebrow="Gallery"
             title="청풍호의 장면을 한눈에 봅니다"
-            description="수상레저, ATV, 단체 이용 사진과 영상으로 예약 전 현장 분위기를 먼저 확인할 수 있습니다."
           />
         </div>
 
@@ -104,6 +103,7 @@ export async function GalleryPreview({ page }: GalleryPreviewProps) {
                 src={post.imageUrl}
                 alt={post.title}
                 fill
+                priority={index < 3}
                 sizes="(min-width: 1024px) 33vw, 50vw"
                 className="object-cover transition duration-700 group-hover:scale-[1.04]"
               />

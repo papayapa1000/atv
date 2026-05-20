@@ -26,7 +26,7 @@ const packageCards = [
     label: "하루 코스",
     text: "물 위에서 먼저 즐기고 ATV로 이어가는 일정은 가족, 연인, 친구 모임 모두에게 가장 문의가 많은 구성입니다.",
     action: "코스 확인하기",
-    href: "/water-ski-atv",
+    href: "/activities",
   },
 ];
 
@@ -49,7 +49,7 @@ export function HomeOverview() {
   return (
     <section className="depth-warm bg-background text-foreground">
       <div className="mx-auto max-w-[1440px] px-5 py-24 lg:px-8 lg:py-36">
-        <div className="mb-12 grid gap-6 lg:grid-cols-[0.58fr_0.42fr] lg:items-end">
+        <div className="mb-12">
           <div>
             <p className="supanova-badge inline-flex px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em]">Stay & Group Course</p>
             <h2 className="headline-tight mt-5 break-keep-all text-4xl font-black leading-[1.08] sm:text-6xl">
@@ -59,12 +59,6 @@ export function HomeOverview() {
               단체, 가족, 연인 일정은 이용 종목보다 동선이 먼저입니다. 수상레저 후 숙박, ATV, 주변 관광까지 한 번에 정리해 드립니다.
             </p>
           </div>
-          <Link href="/stay" className="spring inline-flex w-fit items-center gap-3 rounded-full border border-mist bg-surface px-6 py-3 text-sm font-extrabold text-foreground hover:scale-[1.02] hover:border-sun hover:text-sun">
-            전체보기
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-lake/8">
-              <ArrowRight aria-hidden="true" className="h-4 w-4" weight="bold" />
-            </span>
-          </Link>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-12">

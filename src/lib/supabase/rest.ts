@@ -1,18 +1,9 @@
 import "server-only";
 
-function getSupabaseConfig() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !serviceRoleKey) {
-    throw new Error("Supabase environment variables are not configured.");
-  }
-
-  return { url, serviceRoleKey };
-}
+import { getSupabaseServerConfig } from "./config";
 
 export async function supabaseRest<T>(path: string, init: RequestInit = {}) {
-  const { url, serviceRoleKey } = getSupabaseConfig();
+  const { url, serviceRoleKey } = getSupabaseServerConfig();
   const response = await fetch(`${url}/rest/v1/${path}`, {
     ...init,
     cache: "no-store",

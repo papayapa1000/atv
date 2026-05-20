@@ -31,11 +31,11 @@ export function ReservationGuide() {
               </div>
               <a
                 href={phoneHref}
-                className="spring group inline-flex w-fit items-center gap-3 border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white active:scale-[0.98]"
+                className="spring group inline-flex w-fit shrink-0 items-center gap-3 whitespace-nowrap border border-sun bg-sun px-5 py-3 text-sm font-bold text-white hover:-translate-y-0.5 hover:border-sunset hover:bg-sunset hover:text-white active:scale-[0.98]"
               >
-                <PhoneCall aria-hidden="true" className="h-4 w-4" weight="bold" />
+                <PhoneCall aria-hidden="true" className="h-4 w-4 shrink-0" weight="bold" />
                 예약 가능 시간 확인
-                <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-0.5" weight="bold" />
+                <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0 transition-transform duration-500 group-hover:translate-x-0.5" weight="bold" />
               </a>
             </div>
 

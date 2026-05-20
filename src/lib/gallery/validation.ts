@@ -16,6 +16,10 @@ export type GalleryPostValidationResult =
   | { ok: true; data: NormalizedGalleryPostForm }
   | { ok: false; errors: Record<string, string> };
 
+export type GalleryPostValidationOptions = {
+  requireImages?: boolean;
+};
+
 function fieldToString(value: FormDataEntryValue | string | null | undefined) {
   if (typeof value !== "string") {
     return "";
@@ -75,14 +79,18 @@ export function normalizeGalleryPostForm(input: GalleryPostFormInput): Normalize
   };
 }
 
-export function validateGalleryPostForm(data: NormalizedGalleryPostForm): GalleryPostValidationResult {
+export function validateGalleryPostForm(
+  data: NormalizedGalleryPostForm,
+  options: GalleryPostValidationOptions = {},
+): GalleryPostValidationResult {
   const errors: Record<string, string> = {};
+  const requireImages = options.requireImages ?? true;
 
   if (data.title.length < 2 || data.title.length > 80) {
     errors.title = "제목은 2자 이상 80자 이하로 입력해 주세요.";
   }
 
-  if (data.imageFiles.length < 1) {
+  if (requireImages && data.imageFiles.length < 1) {
     errors.imageFiles = "이미지를 1장 이상 첨부해 주세요.";
   } else if (data.imageFiles.length > maxImageFileCount) {
     errors.imageFiles = "이미지는 최대 8장까지 첨부할 수 있습니다.";

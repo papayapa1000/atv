@@ -5,7 +5,7 @@ import test from "node:test";
 test("home quick info headline explains the selectable course details", () => {
   const source = readFileSync("src/components/home/QuickInfo.tsx", "utf8");
 
-  assert.equal(source.includes("즐길거리별 요금과 코스를 확인하세요"), true);
+  assert.equal(source.includes("종목별 요금과 코스를 확인하세요"), true);
   assert.equal(source.includes("오늘 일정에 맞는 종목부터 고르세요"), false);
 });
 

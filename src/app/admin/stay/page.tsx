@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeSlash, ImageSquare } from "@phosphor-icons/react/ssr";
+import { deleteAdminStayPostAction } from "@/app/admin/actions";
+import { AdminDeleteConfirmButton } from "@/components/admin/AdminDeleteConfirmButton";
+import { AdminStayPostEditModal } from "@/components/admin/AdminStayPostEditModal";
 import { AdminStayPostForm } from "@/components/admin/AdminStayPostForm";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { requireAdminSession } from "@/lib/admin/session";
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 type AdminStayPageProps = {
-  searchParams?: Promise<{ created?: string }>;
+  searchParams?: Promise<{ created?: string; updated?: string; deleted?: string; error?: string }>;
 };
 
 export default async function AdminStayPage({ searchParams }: AdminStayPageProps) {
@@ -56,6 +59,18 @@ export default async function AdminStayPage({ searchParams }: AdminStayPageProps
 
           {params.created ? (
             <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">숙박 정보가 등록되었습니다.</div>
+          ) : null}
+
+          {params.updated ? (
+            <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">숙박 정보가 수정되었습니다.</div>
+          ) : null}
+
+          {params.deleted ? (
+            <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">숙박 정보가 삭제되었습니다.</div>
+          ) : null}
+
+          {params.error ? (
+            <div className="mt-8 border border-sunset/25 bg-surface px-5 py-4 text-sm font-bold text-sunset">요청을 처리하지 못했습니다. 입력값과 Supabase 설정을 확인해 주세요.</div>
           ) : null}
 
           {loadError ? (
@@ -114,11 +129,15 @@ export default async function AdminStayPage({ searchParams }: AdminStayPageProps
                           </div>
                           <p className="mt-3 line-clamp-2 text-sm leading-6 text-foreground/58">{post.content}</p>
                           <p className="mt-3 text-xs font-bold text-lake">첨부 이미지 {post.imageUrls.length}장</p>
-                          {post.isPublished ? (
-                            <Link href={`/stay/${post.id}`} className="spring mt-4 inline-flex text-sm font-bold text-lake hover:text-foreground">
-                              상세페이지 보기
-                            </Link>
-                          ) : null}
+                          <div className="mt-4 flex flex-wrap items-center gap-2">
+                            {post.isPublished ? (
+                              <Link href={`/stay/${post.id}`} className="spring inline-flex border border-lake/20 px-3 py-2 text-sm font-bold text-lake hover:bg-lake hover:text-white">
+                                상세페이지 보기
+                              </Link>
+                            ) : null}
+                            <AdminStayPostEditModal post={post} />
+                            <AdminDeleteConfirmButton id={post.id} action={deleteAdminStayPostAction} />
+                          </div>
                         </div>
                       </article>
                     );

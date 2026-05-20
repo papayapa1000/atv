@@ -1,39 +1,24 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { compressUploadedImageForStorage } from "@/lib/images/compression";
+import { uploadSupabaseStorageObject } from "@/lib/supabase/storage";
 
-const extensionByMimeType: Record<string, string> = {
-  "image/jpeg": ".jpg",
-  "image/png": ".png",
-  "image/webp": ".webp",
-};
+const defaultGalleryImagesBucket = "gallery-images";
 
-const allowedExtensions = new Set([".jpg", ".jpeg", ".png", ".webp"]);
-
-function resolveUploadExtension(file: File) {
-  const originalExtension = path.extname(file.name).toLowerCase();
-
-  if (allowedExtensions.has(originalExtension)) {
-    return originalExtension;
-  }
-
-  return extensionByMimeType[file.type] ?? ".jpg";
+function getGalleryImagesBucket() {
+  return process.env.SUPABASE_GALLERY_IMAGES_BUCKET?.trim() || defaultGalleryImagesBucket;
 }
 
 export async function saveUploadedGalleryImage(file: File) {
-  const uploadDirectory = path.join(process.cwd(), "public", "uploads", "gallery");
-  await mkdir(uploadDirectory, { recursive: true });
-
-  const extension = resolveUploadExtension(file);
-  const fileName = `${Date.now()}-${randomUUID()}${extension}`;
-  const filePath = path.join(uploadDirectory, fileName);
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(filePath, bytes);
-
-  return `/uploads/gallery/${fileName}`;
+  const image = await compressUploadedImageForStorage(file);
+  const fileName = `${Date.now()}-${randomUUID()}${image.extension}`;
+  return uploadSupabaseStorageObject({
+    bucket: getGalleryImagesBucket(),
+    objectPath: fileName,
+    body: image.body,
+    contentType: image.contentType,
+  });
 }
 
 export async function saveUploadedGalleryImages(files: File[]) {

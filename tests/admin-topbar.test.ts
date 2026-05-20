@@ -22,3 +22,21 @@ test("admin topbar follows the public site menu order and omits logout", () => {
   assert.equal(videosIndex < showcaseIndex, true);
   assert.equal(showcaseIndex < stayIndex, true);
 });
+
+test("admin dashboard cards follow the same order as the admin menu", () => {
+  const source = readFileSync("src/app/admin/dashboard/page.tsx", "utf8");
+
+  const reservationIndex = source.indexOf('label: "예약게시판"');
+  const galleryIndex = source.indexOf('label: "갤러리"');
+  const videosIndex = source.indexOf('label: "동영상"');
+  const showcaseIndex = source.indexOf('label: "자랑하기"');
+  const stayIndex = source.indexOf('label: "주변 숙박"');
+  const noticesIndex = source.indexOf('label: "공지사항"');
+
+  assert.equal(reservationIndex > -1, true);
+  assert.equal(reservationIndex < galleryIndex, true);
+  assert.equal(galleryIndex < videosIndex, true);
+  assert.equal(videosIndex < showcaseIndex, true);
+  assert.equal(showcaseIndex < stayIndex, true);
+  assert.equal(stayIndex < noticesIndex, true);
+});

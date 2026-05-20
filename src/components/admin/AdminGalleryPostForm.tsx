@@ -3,6 +3,7 @@
 import { ImageSquare, PaperPlaneTilt } from "@phosphor-icons/react";
 import { useActionState } from "react";
 import { createAdminGalleryPostAction, type AdminGalleryActionState } from "@/app/admin/actions";
+import { AdminGalleryImageFileFields } from "./AdminGalleryImageFileFields";
 
 const initialGalleryActionState: AdminGalleryActionState = {
   message: "",
@@ -72,18 +73,10 @@ export function AdminGalleryPostForm() {
         {fieldError(state, "content")}
       </label>
 
-      <label className="block">
-        <span className="text-sm font-bold text-foreground">첨부 이미지</span>
-        <input
-          name="imageFiles"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          multiple
-          required
-          className="mt-2 w-full border border-foreground/14 bg-white px-4 py-3 text-sm text-foreground file:mr-4 file:border-0 file:bg-lake file:px-4 file:py-2 file:text-sm file:font-bold file:text-white focus:border-lake focus:outline-none focus:ring-2 focus:ring-lake/16"
-        />
+      <div>
+        <AdminGalleryImageFileFields required />
         {fieldError(state, "imageFiles")}
-      </label>
+      </div>
 
       <label className="flex items-start gap-3 border border-foreground/10 bg-surface-muted/62 p-4 text-sm leading-6 text-foreground/70">
         <input

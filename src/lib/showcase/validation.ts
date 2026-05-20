@@ -19,6 +19,7 @@ export type ShowcasePostValidationResult =
   | { ok: false; errors: Record<string, string> };
 
 const allowedImageExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+const allowedImageMimeTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 const maxImageFileSize = 8 * 1024 * 1024;
 const maxImageFileCount = 5;
 
@@ -56,7 +57,7 @@ function validateImageFile(file: File) {
     return "사진 파일은 8MB 이하로 등록해 주세요.";
   }
 
-  if (!file.type.startsWith("image/") && !hasAllowedImageExtension(file.name)) {
+  if (!allowedImageMimeTypes.has(file.type) && !hasAllowedImageExtension(file.name)) {
     return "사진 파일은 jpg, png, webp 형식만 등록해 주세요.";
   }
 

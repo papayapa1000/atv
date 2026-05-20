@@ -1,0 +1,29 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+
+test("admin video file uploads require Supabase Storage", () => {
+  const uploadSource = readFileSync("src/lib/videos/uploads.ts", "utf8");
+  const actionSource = readFileSync("src/app/admin/actions.ts", "utf8");
+  const envSource = readFileSync(".env.example", "utf8");
+  const readmeSource = readFileSync("supabase/README.md", "utf8");
+  const storageMigrationSource = readFileSync("supabase/migrations/20260520002000_create_video_files_bucket.sql", "utf8");
+
+  assert.equal(actionSource.includes("saveUploadedVideo(videoFile)"), true);
+  assert.equal(actionSource.includes("isSupabaseStorageUploadLimitError"), true);
+  assert.equal(actionSource.includes("storage-limit"), true);
+  assert.equal(uploadSource.includes("uploadSupabaseStorageObject"), true);
+  assert.equal(uploadSource.includes("SUPABASE_VIDEO_FILES_BUCKET"), true);
+  assert.equal(uploadSource.includes("video-files"), true);
+  assert.equal(uploadSource.includes("node:fs/promises"), false);
+  assert.equal(uploadSource.includes(".catch(() => null)"), false);
+  assert.equal(uploadSource.includes("/uploads/videos/"), false);
+  assert.equal(envSource.includes("SUPABASE_VIDEO_FILES_BUCKET=video-files"), true);
+  assert.equal(readmeSource.includes("Video file uploads use the public Supabase Storage bucket `video-files`"), true);
+  assert.equal(storageMigrationSource.includes("storage.buckets"), true);
+  assert.equal(storageMigrationSource.includes("video-files"), true);
+  assert.equal(storageMigrationSource.includes("52428800"), true);
+  assert.equal(storageMigrationSource.includes("104857600"), false);
+  assert.equal(storageMigrationSource.includes("video/mp4"), true);
+  assert.equal(storageMigrationSource.includes("video/webm"), true);
+});

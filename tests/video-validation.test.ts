@@ -45,6 +45,46 @@ test("requires exactly one video source", () => {
   }
 });
 
+test("allows video edit validation to keep an existing uploaded video", () => {
+  const result = validateVideoPostForm(
+    {
+      title: "동영상 수정",
+      youtubeUrl: "",
+      youtubeId: "",
+      videoFile: null,
+      content: "기존 업로드 영상을 유지하면서 설명만 수정합니다.",
+      isPublished: true,
+    },
+    { allowMissingSource: true },
+  );
+
+  assert.equal(result.ok, true);
+  if (result.ok) {
+    assert.equal(result.data.sourceType, "file");
+    assert.equal(result.data.videoFile, null);
+  }
+});
+
+test("rejects video files larger than the Supabase Storage bucket limit", () => {
+  const oversizedFile = new File(["x"], "large-video.mp4", {
+    type: "video/mp4",
+  });
+  Object.defineProperty(oversizedFile, "size", { value: 100 * 1024 * 1024 + 1 });
+  const result = validateVideoPostForm({
+    title: "테스트 영상",
+    youtubeUrl: "",
+    youtubeId: "",
+    videoFile: oversizedFile,
+    content: "영상 파일 크기를 검증합니다.",
+    isPublished: true,
+  });
+
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.match(result.errors.videoFile ?? "", /50MB/);
+  }
+});
+
 test("normalizes video pagination", () => {
   assert.deepEqual(normalizeVideoPage("2", 18), {
     page: 2,

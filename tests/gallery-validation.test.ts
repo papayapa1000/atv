@@ -36,6 +36,20 @@ test("allows up to eight gallery image files", () => {
   assert.deepEqual(validateGalleryPostForm(normalized), { ok: true, data: normalized });
 });
 
+test("allows gallery edit validation without replacement image files", () => {
+  const result = validateGalleryPostForm(
+    {
+      title: "갤러리 수정",
+      content: "기존 이미지를 유지하면서 본문만 수정합니다.",
+      imageFiles: [],
+      isPublished: true,
+    },
+    { requireImages: false },
+  );
+
+  assert.equal(result.ok, true);
+});
+
 test("rejects missing and excessive gallery image files", () => {
   const missing = validateGalleryPostForm({
     title: "이미지 없음",

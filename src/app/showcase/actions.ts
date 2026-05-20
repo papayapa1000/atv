@@ -56,6 +56,7 @@ export async function createShowcaseAction(
 
     revalidatePath("/showcase");
     revalidatePath("/admin/showcase");
+    revalidatePath("/admin/dashboard");
   } catch {
     return {
       message: "게시글 저장 중 문제가 발생했습니다. Supabase 설정과 showcase_posts 테이블을 확인해 주세요.",

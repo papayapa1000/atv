@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { CreateStayPostInput, StayPost } from "./repository";
+import type { CreateStayPostInput, StayPost, UpdateStayPostInput } from "./repository";
 
 const dataFilePath = path.join(process.cwd(), "data", "stay-posts.json");
 
@@ -75,4 +75,33 @@ export async function createLocalStayPost(input: CreateStayPostInput) {
   await writeLocalPosts([post, ...posts]);
 
   return { id: post.id };
+}
+
+export async function updateLocalStayPost(input: UpdateStayPostInput) {
+  const posts = await readLocalPosts();
+  const index = posts.findIndex((post) => post.id === input.id);
+
+  if (index < 0) {
+    throw new Error("Stay post not found");
+  }
+
+  const current = posts[index];
+  const updated: StayPost = {
+    ...current,
+    title: input.title,
+    price: input.price,
+    content: input.content,
+    imageUrls: input.imageUrls,
+    isPublished: input.isPublished,
+  };
+
+  await writeLocalPosts(posts.map((post) => (post.id === input.id ? updated : post)));
+
+  return { id: input.id };
+}
+
+export async function deleteLocalStayPost(id: string) {
+  const posts = await readLocalPosts();
+
+  await writeLocalPosts(posts.filter((post) => post.id !== id));
 }

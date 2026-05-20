@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Eye, EyeSlash } from "@phosphor-icons/react/ssr";
+import { deleteAdminVideoPostAction } from "@/app/admin/actions";
+import { AdminDeleteConfirmButton } from "@/components/admin/AdminDeleteConfirmButton";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { AdminVideoPostForm } from "@/components/admin/AdminVideoPostForm";
+import { AdminVideoPostEditModal } from "@/components/admin/AdminVideoPostEditModal";
 import { VideoThumbnail } from "@/components/videos/VideoThumbnail";
 import { listAdminVideoPosts, type VideoPost } from "@/lib/videos/repository";
 import { requireAdminSession } from "@/lib/admin/session";
@@ -18,12 +21,34 @@ export const metadata: Metadata = {
 };
 
 type AdminVideosPageProps = {
-  searchParams?: Promise<{ created?: string }>;
+  searchParams?: Promise<{ created?: string; updated?: string; deleted?: string; error?: string }>;
 };
+
+function getAdminVideoErrorMessage(error: string | undefined) {
+  switch (error) {
+    case "video-file":
+      return "영상 파일은 50MB 이하의 mp4, webm, mov, m4v 형식으로 등록해 주세요.";
+    case "youtube-url":
+      return "올바른 유튜브 링크를 입력해 주세요.";
+    case "source":
+      return "유튜브 링크 또는 영상 파일 중 하나만 등록해 주세요.";
+    case "storage-limit":
+      return "영상 파일이 현재 Supabase Storage 업로드 제한을 초과했습니다. 50MB 이하 파일로 압축한 뒤 등록해 주세요.";
+    case "save":
+      return "영상 저장 중 오류가 발생했습니다. Supabase Storage와 video_posts 테이블 설정을 확인해 주세요.";
+    case "missing-id":
+    case "validation":
+    case "1":
+      return "요청을 처리하지 못했습니다. 입력값과 Supabase 설정을 확인해 주세요.";
+    default:
+      return "";
+  }
+}
 
 export default async function AdminVideosPage({ searchParams }: AdminVideosPageProps) {
   await requireAdminSession();
   const params = searchParams ? await searchParams : {};
+  const errorMessage = getAdminVideoErrorMessage(params.error);
   let posts: VideoPost[] = [];
   let loadError = "";
 
@@ -54,6 +79,18 @@ export default async function AdminVideosPage({ searchParams }: AdminVideosPageP
 
           {params.created ? (
             <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">동영상 글이 등록되었습니다.</div>
+          ) : null}
+
+          {params.updated ? (
+            <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">동영상 글이 수정되었습니다.</div>
+          ) : null}
+
+          {params.deleted ? (
+            <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">동영상 글이 삭제되었습니다.</div>
+          ) : null}
+
+          {errorMessage ? (
+            <div className="mt-8 border border-sunset/25 bg-surface px-5 py-4 text-sm font-bold text-sunset">{errorMessage}</div>
           ) : null}
 
           {loadError ? (
@@ -94,11 +131,15 @@ export default async function AdminVideosPage({ searchParams }: AdminVideosPageP
                         </div>
                         <p className="mt-2 text-xs font-bold uppercase text-lake">{post.sourceType === "youtube" ? "YouTube" : "Video File"}</p>
                         <p className="mt-3 line-clamp-2 text-sm leading-6 text-foreground/58">{post.content}</p>
-                        {post.isPublished ? (
-                          <Link href={`/videos/${post.id}`} className="spring mt-4 inline-flex text-sm font-bold text-lake hover:text-foreground">
-                            상세페이지 보기
-                          </Link>
-                        ) : null}
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                          {post.isPublished ? (
+                            <Link href={`/videos/${post.id}`} className="spring inline-flex border border-lake/20 px-3 py-2 text-sm font-bold text-lake hover:bg-lake hover:text-white">
+                              상세페이지 보기
+                            </Link>
+                          ) : null}
+                          <AdminVideoPostEditModal post={post} />
+                          <AdminDeleteConfirmButton id={post.id} action={deleteAdminVideoPostAction} />
+                        </div>
                       </div>
                     </article>
                   ))}

@@ -108,7 +108,7 @@ export function QuickInfo() {
             <div className="depth-surface h-full rounded-[1.65rem] border border-mist bg-surface p-7 sm:p-9">
               <p className="supanova-badge inline-flex px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em]">Course Finder</p>
               <h2 className="headline-tight mt-6 break-keep-all text-4xl font-black leading-[1.08] sm:text-5xl">
-                즐길거리별 요금과 코스를 확인하세요
+                종목별 요금과 코스를 확인하세요
               </h2>
               <p className="mt-5 max-w-md break-keep-all text-base leading-8 text-ink-muted">
                 강습, 단체 놀이기구, 보트 투어, ATV는 준비 시간과 동선이 다릅니다. 아래에서 목적을 고른 뒤 바로 상담하면 가장 빠릅니다.

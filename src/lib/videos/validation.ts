@@ -35,8 +35,12 @@ export type VideoPostValidationResult =
   | { ok: true; data: ValidatedVideoPostForm }
   | { ok: false; errors: Record<string, string> };
 
+export type VideoPostValidationOptions = {
+  allowMissingSource?: boolean;
+};
+
 const allowedVideoExtensions = [".mp4", ".webm", ".mov", ".m4v"];
-const maxVideoFileSize = 200 * 1024 * 1024;
+const maxVideoFileSize = 50 * 1024 * 1024;
 
 function fieldToString(value: FormDataEntryValue | string | null | undefined) {
   if (typeof value !== "string") {
@@ -73,7 +77,7 @@ function hasAllowedVideoExtension(fileName: string) {
 
 function validateVideoFile(file: File) {
   if (file.size > maxVideoFileSize) {
-    return "영상 파일은 200MB 이하로 등록해 주세요.";
+    return "영상 파일은 50MB 이하로 등록해 주세요.";
   }
 
   if (!file.type.startsWith("video/") && !hasAllowedVideoExtension(file.name)) {
@@ -96,10 +100,14 @@ export function normalizeVideoPostForm(input: VideoPostFormInput): NormalizedVid
   };
 }
 
-export function validateVideoPostForm(data: NormalizedVideoPostForm): VideoPostValidationResult {
+export function validateVideoPostForm(
+  data: NormalizedVideoPostForm,
+  options: VideoPostValidationOptions = {},
+): VideoPostValidationResult {
   const errors: Record<string, string> = {};
   const hasYoutube = Boolean(data.youtubeUrl);
   const hasFile = Boolean(data.videoFile);
+  const allowMissingSource = options.allowMissingSource ?? false;
 
   if (data.title.length < 2 || data.title.length > 80) {
     errors.title = "제목은 2자 이상 80자 이하로 입력해 주세요.";
@@ -109,7 +117,7 @@ export function validateVideoPostForm(data: NormalizedVideoPostForm): VideoPostV
     errors.content = "내용은 5자 이상 2,000자 이하로 입력해 주세요.";
   }
 
-  if (!hasYoutube && !hasFile) {
+  if (!hasYoutube && !hasFile && !allowMissingSource) {
     errors.source = "유튜브 링크 또는 영상 파일 중 하나를 등록해 주세요.";
   }
 

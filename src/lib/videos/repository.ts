@@ -41,6 +41,10 @@ export type CreateVideoPostInput = Omit<ValidatedVideoPostForm, "videoFile"> & {
   videoUrl: string | null;
 };
 
+export type UpdateVideoPostInput = CreateVideoPostInput & {
+  id: string;
+};
+
 const videoSelect = "id,created_at,title,source_type,youtube_url,youtube_id,video_url,content,is_published,sort_order";
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -270,4 +274,38 @@ export async function createVideoPost(input: CreateVideoPostInput) {
   });
 
   return created;
+}
+
+export async function updateVideoPost(input: UpdateVideoPostInput) {
+  const [updated] = await supabaseRest<Array<{ id: string }>>(
+    `video_posts?select=id&id=eq.${encodeURIComponent(input.id)}`,
+    {
+      method: "PATCH",
+      headers: {
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        title: input.title,
+        source_type: input.sourceType,
+        youtube_url: input.youtubeUrl,
+        youtube_id: input.youtubeId,
+        video_url: input.videoUrl,
+        content: input.content,
+        is_published: input.isPublished,
+      }),
+    },
+  );
+
+  return updated;
+}
+
+export async function deleteVideoPost(id: string) {
+  const rows = await supabaseRest<SupabaseVideoPostRow[]>(`video_posts?select=${videoSelect}&id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: {
+      Prefer: "return=representation",
+    },
+  });
+
+  return rows[0] ? toVideoPost(rows[0]) : null;
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Trash } from "@phosphor-icons/react/ssr";
+import Link from "next/link";
 import { deleteAdminShowcasePostAction } from "@/app/admin/actions";
+import { AdminDeleteConfirmButton } from "@/components/admin/AdminDeleteConfirmButton";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { requireAdminSession } from "@/lib/admin/session";
 import { listAdminShowcasePosts, type ShowcasePost } from "@/lib/showcase/repository";
@@ -96,16 +97,12 @@ export default async function AdminShowcasePage({ searchParams }: AdminShowcaseP
                       <time dateTime={post.createdAt} className="numeric text-xs font-bold text-foreground/48 sm:text-right sm:text-sm">
                         {formatDate(post.createdAt)}
                       </time>
-                      <form action={deleteAdminShowcasePostAction} className="sm:justify-self-end">
-                        <input type="hidden" name="id" value={post.id} />
-                        <button
-                          type="submit"
-                          className="spring inline-flex items-center gap-2 border border-sunset/28 px-3 py-2 text-sm font-bold text-sunset hover:bg-sunset hover:text-white"
-                        >
-                          <Trash aria-hidden="true" className="h-4 w-4" weight="bold" />
-                          삭제
-                        </button>
-                      </form>
+                      <div className="flex flex-wrap gap-2 sm:justify-self-end">
+                        <Link href={`/showcase/${post.id}`} className="spring inline-flex border border-lake/20 px-3 py-2 text-sm font-bold text-lake hover:bg-lake hover:text-white">
+                          상세페이지 보기
+                        </Link>
+                        <AdminDeleteConfirmButton id={post.id} action={deleteAdminShowcasePostAction} />
+                      </div>
                     </div>
                   </li>
                 ))}

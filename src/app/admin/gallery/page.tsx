@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeSlash } from "@phosphor-icons/react/ssr";
+import { deleteAdminGalleryPostAction } from "@/app/admin/actions";
+import { AdminDeleteConfirmButton } from "@/components/admin/AdminDeleteConfirmButton";
+import { AdminGalleryPostEditModal } from "@/components/admin/AdminGalleryPostEditModal";
 import { AdminGalleryPostForm } from "@/components/admin/AdminGalleryPostForm";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { listAdminGalleryPosts, type GalleryPost } from "@/lib/gallery/repository";
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 type AdminGalleryPageProps = {
-  searchParams?: Promise<{ created?: string }>;
+  searchParams?: Promise<{ created?: string; updated?: string; deleted?: string; error?: string }>;
 };
 
 export default async function AdminGalleryPage({ searchParams }: AdminGalleryPageProps) {
@@ -54,6 +57,18 @@ export default async function AdminGalleryPage({ searchParams }: AdminGalleryPag
 
           {params.created ? (
             <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">갤러리 글이 등록되었습니다.</div>
+          ) : null}
+
+          {params.updated ? (
+            <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">갤러리 글이 수정되었습니다.</div>
+          ) : null}
+
+          {params.deleted ? (
+            <div className="mt-8 border border-lake/20 bg-surface px-5 py-4 text-sm font-bold text-lake">갤러리 글이 삭제되었습니다.</div>
+          ) : null}
+
+          {params.error ? (
+            <div className="mt-8 border border-sunset/25 bg-surface px-5 py-4 text-sm font-bold text-sunset">요청을 처리하지 못했습니다. 입력값과 Supabase 설정을 확인해 주세요.</div>
           ) : null}
 
           {loadError ? (
@@ -95,11 +110,16 @@ export default async function AdminGalleryPage({ searchParams }: AdminGalleryPag
                           </span>
                         </div>
                         <p className="mt-3 line-clamp-2 text-sm leading-6 text-foreground/58">{post.content}</p>
-                        {post.isPublished ? (
-                          <Link href={`/gallery/${post.id}`} className="spring mt-4 inline-flex text-sm font-bold text-lake hover:text-foreground">
-                            상세페이지 보기
-                          </Link>
-                        ) : null}
+                        <p className="mt-3 text-xs font-bold text-lake">첨부 이미지 {post.imageUrls.length}장</p>
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                          {post.isPublished ? (
+                            <Link href={`/gallery/${post.id}`} className="spring inline-flex border border-lake/20 px-3 py-2 text-sm font-bold text-lake hover:bg-lake hover:text-white">
+                              상세페이지 보기
+                            </Link>
+                          ) : null}
+                          <AdminGalleryPostEditModal post={post} />
+                          <AdminDeleteConfirmButton id={post.id} action={deleteAdminGalleryPostAction} />
+                        </div>
                       </div>
                     </article>
                   ))}
