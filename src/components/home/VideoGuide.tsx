@@ -108,7 +108,6 @@ export async function VideoGuide({ page }: VideoGuideProps) {
           {videoPage.items.length === 0 ? (
             <div className="col-span-full flex min-h-[28rem] flex-col items-center justify-center bg-surface px-5 py-16 text-center">
               <p className="text-lg font-bold">등록된 동영상이 없습니다.</p>
-              <p className="mt-3 text-sm leading-7 text-ink-muted">관리자 페이지에서 유튜브 링크 또는 영상 파일을 등록해 주세요.</p>
             </div>
           ) : null}
         </div>

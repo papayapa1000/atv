@@ -121,7 +121,6 @@ export function StayGuide({ stayPage }: StayGuideProps) {
         ) : (
           <div className="mt-12 border border-mist bg-surface px-5 py-20 text-center">
             <p className="text-lg font-bold">등록된 주변 숙박 정보가 없습니다.</p>
-            <p className="mt-3 text-sm leading-7 text-ink-muted">관리자 페이지에서 숙박 정보를 등록하면 이곳에 표시됩니다.</p>
           </div>
         )}
 
