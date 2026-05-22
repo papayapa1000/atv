@@ -37,7 +37,7 @@ export type VideoPostPage = VideoPageMeta & {
   items: VideoPost[];
 };
 
-export type CreateVideoPostInput = Omit<ValidatedVideoPostForm, "videoFile"> & {
+export type CreateVideoPostInput = Omit<ValidatedVideoPostForm, "videoFile" | "uploadedVideoUrl"> & {
   videoUrl: string | null;
 };
 

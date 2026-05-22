@@ -1,8 +1,9 @@
 "use client";
 
 import { PaperPlaneTilt, VideoCamera } from "@phosphor-icons/react";
-import { useActionState } from "react";
+import { type FormEvent, useActionState, useRef, useState, useTransition } from "react";
 import { createAdminVideoPostAction, type AdminVideoActionState } from "@/app/admin/actions";
+import { uploadVideoFileDirectly } from "@/lib/videos/direct-upload";
 
 const initialVideoActionState: AdminVideoActionState = {
   message: "",
@@ -47,13 +48,55 @@ function TextField({ state, name, label, placeholder, required }: TextFieldProps
 }
 
 export function AdminVideoPostForm() {
-  const [state, formAction, pending] = useActionState(createAdminVideoPostAction, initialVideoActionState);
+  const [state, formAction, actionPending] = useActionState(createAdminVideoPostAction, initialVideoActionState);
+  const [isTransitionPending, startTransition] = useTransition();
+  const [uploading, setUploading] = useState(false);
+  const [localMessage, setLocalMessage] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const pending = actionPending || isTransitionPending || uploading;
+  const message = localMessage || state.message;
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    const selectedFile = fileInputRef.current?.files?.[0] ?? null;
+
+    if (!selectedFile) {
+      return;
+    }
+
+    event.preventDefault();
+    setLocalMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
+
+    if (youtubeUrl) {
+      setLocalMessage("유튜브 링크와 동영상 파일은 동시에 등록할 수 없습니다.");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const upload = await uploadVideoFileDirectly(selectedFile);
+      formData.delete("videoFile");
+      formData.set("uploadedVideoUrl", upload.publicUrl);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      startTransition(() => formAction(formData));
+    } catch (error) {
+      setLocalMessage(error instanceof Error ? error.message : "동영상 파일 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
-    <form action={formAction} className="grid gap-6">
-      {state.message ? (
+    <form action={formAction} className="grid gap-6" onSubmit={handleSubmit}>
+      {message ? (
         <div role="alert" className="border border-sunset/25 bg-sun/12 px-4 py-3 text-sm font-bold text-foreground">
-          {state.message}
+          {message}
         </div>
       ) : null}
 
@@ -63,6 +106,7 @@ export function AdminVideoPostForm() {
       <label className="block">
         <span className="text-sm font-bold text-foreground">영상 파일 첨부</span>
         <input
+          ref={fileInputRef}
           name="videoFile"
           type="file"
           accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov,.m4v"

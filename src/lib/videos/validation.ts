@@ -8,6 +8,7 @@ export type VideoPostFormInput = {
   title?: FormDataEntryValue | string | null;
   youtubeUrl?: FormDataEntryValue | string | null;
   videoFile?: FormDataEntryValue | File | null;
+  uploadedVideoUrl?: FormDataEntryValue | string | null;
   content?: FormDataEntryValue | string | null;
   isPublished?: FormDataEntryValue | string | boolean | null;
 };
@@ -17,6 +18,7 @@ export type NormalizedVideoPostForm = {
   youtubeUrl: string;
   youtubeId: string;
   videoFile: File | null;
+  uploadedVideoUrl: string;
   content: string;
   isPublished: boolean;
 };
@@ -27,6 +29,7 @@ export type ValidatedVideoPostForm = {
   youtubeUrl: string | null;
   youtubeId: string | null;
   videoFile: File | null;
+  uploadedVideoUrl: string | null;
   content: string;
   isPublished: boolean;
 };
@@ -39,8 +42,14 @@ export type VideoPostValidationOptions = {
   allowMissingSource?: boolean;
 };
 
-const allowedVideoExtensions = [".mp4", ".webm", ".mov", ".m4v"];
-const maxVideoFileSize = 250 * 1024 * 1024;
+export type VideoUploadMetadata = {
+  name: string;
+  type: string;
+  size: number;
+};
+
+export const allowedVideoExtensions = [".mp4", ".webm", ".mov", ".m4v"];
+export const maxVideoFileSize = 250 * 1024 * 1024;
 
 function fieldToString(value: FormDataEntryValue | string | null | undefined) {
   if (typeof value !== "string") {
@@ -75,7 +84,7 @@ function hasAllowedVideoExtension(fileName: string) {
   return allowedVideoExtensions.some((extension) => lowerName.endsWith(extension));
 }
 
-function validateVideoFile(file: File) {
+export function validateVideoUploadMetadata(file: VideoUploadMetadata) {
   if (file.size > maxVideoFileSize) {
     return "영상 파일은 250MB 이하로 등록해 주세요.";
   }
@@ -95,6 +104,7 @@ export function normalizeVideoPostForm(input: VideoPostFormInput): NormalizedVid
     youtubeUrl,
     youtubeId: extractYouTubeVideoId(youtubeUrl),
     videoFile: hasVideoFile(input.videoFile) ? input.videoFile : null,
+    uploadedVideoUrl: fieldToString(input.uploadedVideoUrl),
     content: fieldToString(input.content),
     isPublished: isChecked(input.isPublished),
   };
@@ -106,7 +116,8 @@ export function validateVideoPostForm(
 ): VideoPostValidationResult {
   const errors: Record<string, string> = {};
   const hasYoutube = Boolean(data.youtubeUrl);
-  const hasFile = Boolean(data.videoFile);
+  const hasUploadedVideoUrl = Boolean(data.uploadedVideoUrl);
+  const hasFile = Boolean(data.videoFile) || hasUploadedVideoUrl;
   const allowMissingSource = options.allowMissingSource ?? false;
 
   if (data.title.length < 2 || data.title.length > 80) {
@@ -130,7 +141,7 @@ export function validateVideoPostForm(
   }
 
   if (data.videoFile) {
-    const fileError = validateVideoFile(data.videoFile);
+    const fileError = validateVideoUploadMetadata(data.videoFile);
     if (fileError) {
       errors.videoFile = fileError;
     }
@@ -148,6 +159,7 @@ export function validateVideoPostForm(
       youtubeUrl: hasYoutube ? data.youtubeUrl : null,
       youtubeId: hasYoutube ? data.youtubeId : null,
       videoFile: data.videoFile,
+      uploadedVideoUrl: hasUploadedVideoUrl ? data.uploadedVideoUrl : null,
       content: data.content,
       isPublished: data.isPublished,
     },

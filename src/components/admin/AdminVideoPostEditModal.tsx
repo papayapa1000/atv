@@ -1,10 +1,11 @@
 "use client";
 
 import { CircleNotch, PencilSimple, X } from "@phosphor-icons/react";
-import { useId, useState } from "react";
+import { type FormEvent, useId, useState, useTransition } from "react";
 import { createPortal, useFormStatus } from "react-dom";
 import { updateAdminVideoPostAction } from "@/app/admin/actions";
 import type { VideoPost } from "@/lib/videos/repository";
+import { uploadVideoFileDirectly } from "@/lib/videos/direct-upload";
 import { AdminVideoFileReplacementField } from "./AdminVideoFileReplacementField";
 import { useBodyScrollLock } from "./useBodyScrollLock";
 
@@ -14,10 +15,12 @@ type AdminVideoPostEditModalProps = {
 
 type AdminVideoEditFormActionsProps = {
   onCancel: () => void;
+  uploading: boolean;
 };
 
-function AdminVideoEditFormActions({ onCancel }: AdminVideoEditFormActionsProps) {
-  const { pending } = useFormStatus();
+function AdminVideoEditFormActions({ onCancel, uploading }: AdminVideoEditFormActionsProps) {
+  const { pending: formPending } = useFormStatus();
+  const pending = formPending || uploading;
 
   return (
     <>
@@ -80,7 +83,36 @@ export function getVideoFileName(videoUrl: string | null) {
 export function AdminVideoPostEditModal({ post }: AdminVideoPostEditModalProps) {
   const titleId = useId();
   const [open, setOpen] = useState(false);
+  const [isTransitionPending, startTransition] = useTransition();
+  const [uploading, setUploading] = useState(false);
+  const [localMessage, setLocalMessage] = useState("");
+  const pending = uploading || isTransitionPending;
   useBodyScrollLock(open);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const replacementVideoFile = formData.get("videoFile");
+
+    if (!(replacementVideoFile instanceof File) || replacementVideoFile.size === 0) {
+      return;
+    }
+
+    event.preventDefault();
+    setLocalMessage("");
+    setUploading(true);
+
+    try {
+      const upload = await uploadVideoFileDirectly(replacementVideoFile);
+      formData.delete("videoFile");
+      formData.set("uploadedVideoUrl", upload.publicUrl);
+      startTransition(() => updateAdminVideoPostAction(formData));
+    } catch (error) {
+      setLocalMessage(error instanceof Error ? error.message : "동영상 파일 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
     <>
@@ -114,9 +146,14 @@ export function AdminVideoPostEditModal({ post }: AdminVideoPostEditModalProps) 
               </button>
             </div>
 
-            <form action={updateAdminVideoPostAction} className="mt-5 grid gap-4">
+            <form action={updateAdminVideoPostAction} className="mt-5 grid gap-4" onSubmit={handleSubmit}>
               <input type="hidden" name="id" value={post.id} />
               <input type="hidden" name="existingVideoUrl" value={post.videoUrl ?? ""} />
+              {localMessage ? (
+                <div role="alert" className="border border-sunset/25 bg-sun/12 px-4 py-3 text-sm font-bold text-foreground">
+                  {localMessage}
+                </div>
+              ) : null}
               <label className="block">
                 <span className="text-sm font-bold text-foreground">제목</span>
                 <input
@@ -153,7 +190,7 @@ export function AdminVideoPostEditModal({ post }: AdminVideoPostEditModalProps) 
                   체크를 해제하면 공개 목록에서 숨깁니다.
                 </span>
               </label>
-              <AdminVideoEditFormActions onCancel={() => setOpen(false)} />
+              <AdminVideoEditFormActions onCancel={() => setOpen(false)} uploading={pending} />
             </form>
           </div>
         </div>,

@@ -50,7 +50,7 @@ test("admin video posts can be updated and deleted from the video management pag
   assert.equal(actionSource.includes("deleteAdminVideoPostAction"), true);
   assert.equal(actionSource.includes("updateVideoPost"), true);
   assert.equal(actionSource.includes("deleteVideoPost"), true);
-  assert.equal(actionSource.includes("hasReplacementVideoFile ? \"\" : formData.get(\"youtubeUrl\")"), true);
+  assert.equal(actionSource.includes("hasReplacementVideoFile || uploadedVideoUrl ? \"\" : formData.get(\"youtubeUrl\")"), true);
   assert.equal(actionSource.includes("\"video-file\""), true);
   assert.equal(actionSource.includes("\"storage-limit\""), true);
   assert.equal(repositorySource.includes("export async function updateVideoPost"), true);

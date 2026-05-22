@@ -1,7 +1,7 @@
 "use client";
 
 import { VideoCamera, X } from "@phosphor-icons/react";
-import { useId, useRef, useState } from "react";
+import { type ChangeEvent, useId, useRef, useState } from "react";
 
 type AdminVideoFileReplacementFieldProps = {
   currentFileName: string;
@@ -10,14 +10,19 @@ type AdminVideoFileReplacementFieldProps = {
 export function AdminVideoFileReplacementField({ currentFileName }: AdminVideoFileReplacementFieldProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const selectedFileName = selectedFile?.name ?? "";
+
+  function onFileSelected(event: ChangeEvent<HTMLInputElement>) {
+    setSelectedFile(event.currentTarget.files?.[0] ?? null);
+  }
 
   function clearSelectedFile() {
     if (inputRef.current) {
       inputRef.current.value = "";
     }
 
-    setSelectedFileName("");
+    setSelectedFile(null);
   }
 
   return (
@@ -46,7 +51,7 @@ export function AdminVideoFileReplacementField({ currentFileName }: AdminVideoFi
           name="videoFile"
           type="file"
           accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov,.m4v"
-          onChange={(event) => setSelectedFileName(event.currentTarget.files?.[0]?.name ?? "")}
+          onChange={onFileSelected}
           className="sr-only"
         />
 

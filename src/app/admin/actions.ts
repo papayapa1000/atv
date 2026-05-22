@@ -16,7 +16,7 @@ import { normalizeStayPostForm, validateStayPostForm } from "@/lib/stay/validati
 import { isSupabaseStorageUploadLimitError } from "@/lib/supabase/storage";
 import { deleteManagedStorageAssets } from "@/lib/supabase/storage-assets";
 import { createVideoPost, deleteVideoPost, updateVideoPost } from "@/lib/videos/repository";
-import { saveUploadedVideo } from "@/lib/videos/uploads";
+import { isManagedUploadedVideoUrl, saveUploadedVideo } from "@/lib/videos/uploads";
 import { normalizeVideoPostForm, validateVideoPostForm } from "@/lib/videos/validation";
 
 export type AdminLoginState = {
@@ -453,6 +453,7 @@ export async function createAdminVideoPostAction(
     title: formData.get("title"),
     youtubeUrl: formData.get("youtubeUrl"),
     videoFile: formData.get("videoFile"),
+    uploadedVideoUrl: formData.get("uploadedVideoUrl"),
     content: formData.get("content"),
     isPublished: formData.get("isPublished"),
   });
@@ -473,11 +474,15 @@ export async function createAdminVideoPostAction(
   }
 
   try {
-    const { videoFile, ...videoData } = result.data;
+    const { videoFile, uploadedVideoUrl, ...videoData } = result.data;
+    if (!videoFile && uploadedVideoUrl && !isManagedUploadedVideoUrl(uploadedVideoUrl)) {
+      throw new Error("Uploaded video URL is not managed by this application");
+    }
+
     const videoUrl = videoFile ? await saveUploadedVideo(videoFile) : null;
     const created = await createVideoPost({
       ...videoData,
-      videoUrl,
+      videoUrl: videoUrl ?? uploadedVideoUrl,
     });
 
     revalidatePath("/videos");
@@ -506,10 +511,12 @@ export async function updateAdminVideoPostAction(formData: FormData) {
   const existingVideoUrl = readFormString(formData.get("existingVideoUrl"));
   const replacementVideoFile = formData.get("videoFile");
   const hasReplacementVideoFile = isUploadedFile(replacementVideoFile);
+  const uploadedVideoUrl = readFormString(formData.get("uploadedVideoUrl"));
   const normalized = normalizeVideoPostForm({
     title: formData.get("title"),
-    youtubeUrl: hasReplacementVideoFile ? "" : formData.get("youtubeUrl"),
+    youtubeUrl: hasReplacementVideoFile || uploadedVideoUrl ? "" : formData.get("youtubeUrl"),
     videoFile: replacementVideoFile,
+    uploadedVideoUrl,
     content: formData.get("content"),
     isPublished: formData.get("isPublished"),
   });
@@ -534,8 +541,18 @@ export async function updateAdminVideoPostAction(formData: FormData) {
   }
 
   try {
-    const { videoFile, ...videoData } = result.data;
-    const videoUrl = videoFile ? await saveUploadedVideo(videoFile) : videoData.sourceType === "file" ? existingVideoUrl : null;
+    const { videoFile, uploadedVideoUrl, ...videoData } = result.data;
+    if (!videoFile && uploadedVideoUrl && !isManagedUploadedVideoUrl(uploadedVideoUrl)) {
+      throw new Error("Uploaded video URL is not managed by this application");
+    }
+
+    const videoUrl = videoFile
+      ? await saveUploadedVideo(videoFile)
+      : uploadedVideoUrl
+        ? uploadedVideoUrl
+        : videoData.sourceType === "file"
+          ? existingVideoUrl
+          : null;
 
     if (videoData.sourceType === "file" && !videoUrl) {
       throw new Error("Video post requires an uploaded video URL");

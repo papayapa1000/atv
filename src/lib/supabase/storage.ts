@@ -1,6 +1,6 @@
 import "server-only";
 
-import { readSupabaseServerConfig } from "./config";
+import { getSupabaseServerConfig, readSupabaseServerConfig } from "./config";
 
 export type SupabaseStorageUploadInput = {
   bucket: string;
@@ -14,6 +14,12 @@ export type SupabaseStorageObjectRef = {
   objectPath: string;
 };
 
+export type SupabaseStorageSignedUpload = SupabaseStorageObjectRef & {
+  signedUrl: string;
+  publicUrl: string;
+  token: string;
+};
+
 export function isSupabaseStorageUploadLimitError(error: unknown) {
   return error instanceof Error && /413|Payload too large|exceeded the maximum allowed size/i.test(error.message);
 }
@@ -24,6 +30,59 @@ function encodeStorageObjectPath(objectPath: string) {
 
 function getPublicStorageObjectUrl(url: string, bucket: string, objectPath: string) {
   return `${url}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodeStorageObjectPath(objectPath)}`;
+}
+
+export function getSupabasePublicStorageObjectUrl(bucket: string, objectPath: string) {
+  const config = getSupabaseServerConfig();
+
+  return getPublicStorageObjectUrl(config.url, bucket, objectPath);
+}
+
+export async function createSupabaseStorageSignedUpload(
+  input: SupabaseStorageObjectRef,
+): Promise<SupabaseStorageSignedUpload> {
+  const config = getSupabaseServerConfig();
+  const response = await fetch(
+    `${config.url}/storage/v1/object/upload/sign/${encodeURIComponent(input.bucket)}/${encodeStorageObjectPath(input.objectPath)}`,
+    {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        apikey: config.serviceRoleKey,
+        Authorization: `Bearer ${config.serviceRoleKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    },
+  );
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(`Supabase storage signed upload failed: ${response.status} ${message}`);
+  }
+
+  const data = (await response.json()) as { url?: string };
+
+  if (!data.url) {
+    throw new Error("Supabase storage signed upload response did not include a URL.");
+  }
+
+  const signedUrl = data.url.startsWith("http")
+    ? new URL(data.url)
+    : new URL(`${config.url}/storage/v1${data.url.startsWith("/") ? "" : "/"}${data.url}`);
+  const token = signedUrl.searchParams.get("token");
+
+  if (!token) {
+    throw new Error("Supabase storage signed upload response did not include a token.");
+  }
+
+  return {
+    bucket: input.bucket,
+    objectPath: input.objectPath,
+    signedUrl: signedUrl.toString(),
+    publicUrl: getPublicStorageObjectUrl(config.url, input.bucket, input.objectPath),
+    token,
+  };
 }
 
 export async function uploadSupabaseStorageObject(input: SupabaseStorageUploadInput) {

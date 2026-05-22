@@ -35,6 +35,7 @@ test("requires exactly one video source", () => {
     youtubeUrl: "",
     youtubeId: "",
     videoFile: null,
+    uploadedVideoUrl: "",
     content: "등록할 영상 소스가 없습니다.",
     isPublished: true,
   });
@@ -52,6 +53,7 @@ test("allows video edit validation to keep an existing uploaded video", () => {
       youtubeUrl: "",
       youtubeId: "",
       videoFile: null,
+      uploadedVideoUrl: "",
       content: "기존 업로드 영상을 유지하면서 설명만 수정합니다.",
       isPublished: true,
     },
@@ -75,6 +77,7 @@ test("rejects video files larger than the Supabase Storage bucket limit", () => 
     youtubeUrl: "",
     youtubeId: "",
     videoFile: oversizedFile,
+    uploadedVideoUrl: "",
     content: "영상 파일 크기를 검증합니다.",
     isPublished: true,
   });
@@ -82,6 +85,41 @@ test("rejects video files larger than the Supabase Storage bucket limit", () => 
   assert.equal(result.ok, false);
   if (!result.ok) {
     assert.match(result.errors.videoFile ?? "", /250MB/);
+  }
+});
+
+test("accepts a signed-uploaded video URL as the file source", () => {
+  const result = validateVideoPostForm({
+    title: "Signed upload video",
+    youtubeUrl: "",
+    youtubeId: "",
+    videoFile: null,
+    uploadedVideoUrl: "https://example.supabase.co/storage/v1/object/public/video-files/video.mp4",
+    content: "The browser uploaded the video directly to storage first.",
+    isPublished: true,
+  });
+
+  assert.equal(result.ok, true);
+  if (result.ok) {
+    assert.equal(result.data.sourceType, "file");
+    assert.equal(result.data.uploadedVideoUrl?.endsWith("/video.mp4"), true);
+  }
+});
+
+test("rejects mixing YouTube links with signed-uploaded video URLs", () => {
+  const result = validateVideoPostForm({
+    title: "Mixed source video",
+    youtubeUrl: "https://youtu.be/dQw4w9WgXcQ",
+    youtubeId: "dQw4w9WgXcQ",
+    videoFile: null,
+    uploadedVideoUrl: "https://example.supabase.co/storage/v1/object/public/video-files/video.mp4",
+    content: "Only one video source can be submitted.",
+    isPublished: true,
+  });
+
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.match(result.errors.source ?? "", /유튜브/);
   }
 });
 
