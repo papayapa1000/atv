@@ -131,8 +131,8 @@ export default function WaterSkiAtvPage() {
 
           <div className="image-lift relative min-h-[360px] overflow-hidden bg-mist lg:min-h-[560px]">
             <Image
-              src="/images/banana-boat.webp"
-              alt="청풍호에서 바나나보트를 즐기는 방문객들"
+              src="/images/greeting-sunset.webp"
+              alt="청풍호 석양을 바라보는 방문객"
               fill
               sizes="(min-width: 1024px) 48vw, 100vw"
               className="object-cover"

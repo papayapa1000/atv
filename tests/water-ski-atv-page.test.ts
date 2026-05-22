@@ -18,6 +18,13 @@ test("kakao map button uses a filled lake style", () => {
   assert.equal(source.includes("border border-lake/20 bg-surface/72 px-5 py-3 text-sm font-bold text-lake"), false);
 });
 
+test("greeting section uses the sunset image", () => {
+  const source = readFileSync("src/app/water-ski-atv/page.tsx", "utf8");
+
+  assert.equal(source.includes('src="/images/greeting-sunset.webp"'), true);
+  assert.equal(source.includes('alt="청풍호 석양을 바라보는 방문객"'), true);
+});
+
 test("location section uses the updated road address", () => {
   const source = readFileSync("src/app/water-ski-atv/page.tsx", "utf8");
   const oldLotAddress = "\uc131\ub0b4\ub9ac 157";
