@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "@phosphor-icons/react/ssr";
+import { buildPageMetadata } from "@/lib/seo";
 import { getVideoPost } from "@/lib/videos/repository";
 import { getYouTubeEmbedUrl } from "@/lib/videos/youtube";
 
@@ -16,15 +17,26 @@ export async function generateMetadata({ params }: VideoDetailPageProps): Promis
   const post = await getVideoPost(id);
 
   if (!post) {
-    return {
-      title: "동영상 상세 | 제천 수상레저 & 청풍 ATV",
-    };
+    return buildPageMetadata({
+      title: "동영상 상세",
+      description: "청풍호 수상레저와 ATV 현장 영상을 확인하세요.",
+      path: `/videos/${id}`,
+      noIndex: true,
+    });
   }
 
-  return {
+  return buildPageMetadata({
     title: `${post.title} | 동영상`,
     description: post.content,
-  };
+    path: `/videos/${id}`,
+    image: post.thumbnailUrl
+      ? {
+          path: post.thumbnailUrl,
+          alt: post.title,
+        }
+      : undefined,
+    keywords: ["제천 수상레저 영상", post.title],
+  });
 }
 
 export default async function VideoDetailPage({ params }: VideoDetailPageProps) {

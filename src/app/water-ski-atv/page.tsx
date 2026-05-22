@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowRight, MapPin } from "@phosphor-icons/react/ssr";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { NearbySlider, type NearbySpot } from "@/components/home/NearbySlider";
+import { buildPageMetadata } from "@/lib/seo";
 
 const venueAddress = "충북 제천시 금성면 청풍호로 1542-5";
 const encodedAddress = encodeURIComponent(venueAddress);
@@ -91,10 +91,18 @@ const transportGuides = [
   },
 ];
 
-export const metadata: Metadata = {
-  title: "수상스키/ATV | 제천 수상레저 & 청풍 ATV",
+export const metadata = buildPageMetadata({
+  title: "수상스키/ATV",
   description: "제천 청풍호 수상스키, 웨이크보드, ATV 코스와 인사말, 주변관광지, 찾아오시는 길을 확인하세요.",
-};
+  path: "/water-ski-atv",
+  image: {
+    path: "/images/banana-boat.webp",
+    width: 1080,
+    height: 720,
+    alt: "청풍호에서 바나나보트를 즐기는 방문객들",
+  },
+  keywords: ["제천 수상스키", "청풍호 ATV", "제천 찾아가는 길"],
+});
 
 export default function WaterSkiAtvPage() {
   return (

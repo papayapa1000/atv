@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "@phosphor-icons/react/ssr";
 import { getGalleryPost } from "@/lib/gallery/repository";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -16,15 +17,24 @@ export async function generateMetadata({ params }: GalleryDetailPageProps): Prom
   const post = await getGalleryPost(id);
 
   if (!post) {
-    return {
-      title: "갤러리 상세 | 제천 수상레저 & 청풍 ATV",
-    };
+    return buildPageMetadata({
+      title: "갤러리 상세",
+      description: "청풍호 수상레저와 ATV 현장 사진을 확인하세요.",
+      path: `/gallery/${id}`,
+      noIndex: true,
+    });
   }
 
-  return {
+  return buildPageMetadata({
     title: `${post.title} | 갤러리`,
     description: post.content,
-  };
+    path: `/gallery/${id}`,
+    image: {
+      path: post.imageUrl,
+      alt: post.title,
+    },
+    keywords: ["청풍호 레저 사진", post.title],
+  });
 }
 
 export default async function GalleryDetailPage({ params }: GalleryDetailPageProps) {

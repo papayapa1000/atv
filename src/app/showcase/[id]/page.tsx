@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "@phosphor-icons/react/ssr";
+import { buildPageMetadata } from "@/lib/seo";
 import { getShowcasePost } from "@/lib/showcase/repository";
 
 export const dynamic = "force-dynamic";
@@ -69,15 +70,26 @@ export async function generateMetadata({ params }: ShowcaseDetailPageProps): Pro
   const post = await getShowcasePost(id);
 
   if (!post) {
-    return {
-      title: "자랑하기 상세 | 제천 수상레저 & 청풍 ATV",
-    };
+    return buildPageMetadata({
+      title: "자랑하기 상세",
+      description: "제천 청풍호 수상레저와 ATV 방문 후기를 확인하세요.",
+      path: `/showcase/${id}`,
+      noIndex: true,
+    });
   }
 
-  return {
+  return buildPageMetadata({
     title: `${post.title} | 자랑하기`,
     description: post.content,
-  };
+    path: `/showcase/${id}`,
+    image: post.imageUrls[0]
+      ? {
+          path: post.imageUrls[0],
+          alt: post.title,
+        }
+      : undefined,
+    keywords: ["제천 수상레저 후기", post.title],
+  });
 }
 
 export default async function ShowcaseDetailPage({ params }: ShowcaseDetailPageProps) {

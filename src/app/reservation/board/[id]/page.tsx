@@ -6,13 +6,16 @@ import { ReservationDetailClient } from "@/components/reservation/ReservationDet
 import { ReservationSubnav } from "@/components/reservation/ReservationSubnav";
 import { getReservationBoardItem } from "@/lib/reservations/repository";
 import type { ReservationDetailActionState } from "@/lib/reservations/public-types";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "예약글 확인 | 제천 수상레저 & 청풍 ATV",
+export const metadata: Metadata = buildPageMetadata({
+  title: "예약글 확인",
   description: "예약글 비밀번호 확인 후 문의 내용과 답글을 확인하세요.",
-};
+  path: "/reservation/board",
+  noIndex: true,
+});
 
 type ReservationDetailPageProps = {
   params: Promise<{ id: string }>;

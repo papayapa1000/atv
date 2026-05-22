@@ -174,12 +174,14 @@ test("hero slider image transition lets the new image cover from the right", () 
   assert.equal(source.includes("scale: 1.015"), false);
 });
 
-test("hero slider debug mode forces animation even when reduced motion is enabled", () => {
+test("hero slider animates by default and only disables motion through an explicit query", () => {
   const source = readFileSync("src/components/home/HeroImageSlider.tsx", "utf8");
 
   assert.equal(source.includes("const [isDebugMode] = useState(getIsDebugMode);"), true);
+  assert.equal(source.includes("useReducedMotion"), false);
   assert.equal(source.includes('new URLSearchParams(window.location.search).get("motion") === "debug"'), true);
-  assert.equal(source.includes("const shouldReduceSliderMotion = shouldReduceMotion && !isDebugMode;"), true);
+  assert.equal(source.includes('motionParam === "off" || motionParam === "reduce"'), true);
+  assert.equal(source.includes("const [shouldReduceSliderMotion] = useState(getShouldReduceSliderMotion);"), true);
   assert.equal(source.includes('initial={shouldReduceSliderMotion ? false : { x: "100%" }}'), true);
   assert.equal(source.includes("transition={{ duration: shouldReduceSliderMotion ? 0 : 0.78"), true);
   assert.equal(source.includes("if (shouldReduceMotion)"), false);

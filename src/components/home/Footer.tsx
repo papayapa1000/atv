@@ -27,7 +27,15 @@ export function Footer() {
               {businessRows.map(([label, value]) => (
                 <div key={label} className="flex min-w-0 flex-wrap gap-x-2">
                   <dt className="font-semibold text-white/85">{label}</dt>
-                  <dd className={label === "대표전화" ? "numeric" : "break-keep"}>{label === "대표전화" ? <a className="hover:text-white" href={phoneHref}>{value}</a> : value}</dd>
+                  <dd className={label === "대표전화" ? "numeric" : "break-keep"}>
+                    {label === "대표전화" ? (
+                      <a className="hover:text-white" href={phoneHref}>
+                        {value}
+                      </a>
+                    ) : (
+                      value
+                    )}
+                  </dd>
                 </div>
               ))}
             </dl>

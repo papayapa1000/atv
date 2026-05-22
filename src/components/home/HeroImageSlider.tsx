@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import type { MainHeroSlide } from "@/lib/main-hero-slides";
 
@@ -14,19 +14,28 @@ function getIsDebugMode() {
   return typeof window !== "undefined" && new URLSearchParams(window.location.search).get("motion") === "debug";
 }
 
+function getShouldReduceSliderMotion() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const motionParam = new URLSearchParams(window.location.search).get("motion");
+
+  return motionParam === "off" || motionParam === "reduce";
+}
+
 type HeroImageSliderProps = {
   introSlide: MainHeroSlide;
   slides: MainHeroSlide[];
 };
 
 export function HeroImageSlider({ introSlide, slides }: HeroImageSliderProps) {
-  const shouldReduceMotion = useReducedMotion();
   const [isDebugMode] = useState(getIsDebugMode);
+  const [shouldReduceSliderMotion] = useState(getShouldReduceSliderMotion);
   const [isSliderReady, setIsSliderReady] = useState(false);
   const [settledIndex, setSettledIndex] = useState(0);
   const [incomingIndex, setIncomingIndex] = useState<number | null>(null);
   const hasSlides = slides.length > 0;
-  const shouldReduceSliderMotion = shouldReduceMotion && !isDebugMode;
 
   const startSlider = useCallback(() => {
     if (!hasSlides) {

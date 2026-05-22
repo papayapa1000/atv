@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
 import { PhoneCall, ShieldCheck } from "@phosphor-icons/react/ssr";
 import { DepositAccountGuide } from "@/components/reservation/DepositAccountGuide";
 import { ReservationWriteForm } from "@/components/reservation/ReservationWriteForm";
 import { ReservationSubnav } from "@/components/reservation/ReservationSubnav";
+import { buildPageMetadata } from "@/lib/seo";
 import { phoneHref, phoneNumber } from "@/lib/site-data";
 
-export const metadata: Metadata = {
-  title: "예약글쓰기 | 제천 수상레저 & 청풍 ATV",
+export const metadata = buildPageMetadata({
+  title: "예약글쓰기",
   description: "예약자 정보, 이용 날짜, 이용 레저를 남겨 예약 문의를 접수하세요.",
-};
+  path: "/reservation/write",
+  noIndex: true,
+});
 
 export default function ReservationWritePage() {
   return (

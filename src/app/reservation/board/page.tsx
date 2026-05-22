@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { LockKey, PencilSimpleLine } from "@phosphor-icons/react/ssr";
 import { ReservationSubnav } from "@/components/reservation/ReservationSubnav";
 import { getReservationBoardTitle, getStatusLabel } from "@/lib/reservations/validation";
 import { listReservationPostsPage, type ReservationBoardPage } from "@/lib/reservations/repository";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "예약게시판 | 제천 수상레저 & 청풍 ATV",
-  description: "예약글쓰기에서 접수된 예약 문의를 확인하세요.",
-};
+export const metadata = buildPageMetadata({
+  title: "예약게시판",
+  description: "예약글쓰기에서 접수된 예약 문의를 확인하세요. 연락처는 개인정보 보호를 위해 일부만 공개됩니다.",
+  path: "/reservation/board",
+  keywords: ["제천 레저 예약게시판", "청풍호 수상레저 문의"],
+});
 
 type ReservationBoardPageProps = {
   searchParams?: Promise<{ created?: string; page?: string }>;

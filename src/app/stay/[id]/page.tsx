@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "@phosphor-icons/react/ssr";
 import { LinkedContent } from "@/components/common/LinkedContent";
+import { buildPageMetadata } from "@/lib/seo";
 import { getStayPost } from "@/lib/stay/repository";
 
 export const dynamic = "force-dynamic";
@@ -26,15 +27,26 @@ export async function generateMetadata({ params }: StayDetailPageProps): Promise
   const post = await getStayPost(id);
 
   if (!post) {
-    return {
-      title: "주변 숙박 상세 | 제천 수상레저 & 청풍 ATV",
-    };
+    return buildPageMetadata({
+      title: "주변 숙박 상세",
+      description: "제천 수상레저와 ATV 이용 전후로 함께 확인하기 좋은 주변 숙박 정보를 안내합니다.",
+      path: `/stay/${id}`,
+      noIndex: true,
+    });
   }
 
-  return {
+  return buildPageMetadata({
     title: `${post.title} | 주변 숙박`,
     description: post.content,
-  };
+    path: `/stay/${id}`,
+    image: post.imageUrls[0]
+      ? {
+          path: post.imageUrls[0],
+          alt: post.title,
+        }
+      : undefined,
+    keywords: ["제천 청풍호 숙박", post.title],
+  });
 }
 
 export default async function StayDetailPage({ params }: StayDetailPageProps) {

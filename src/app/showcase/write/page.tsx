@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ImageSquare } from "@phosphor-icons/react/ssr";
 import { ShowcaseWriteForm } from "@/components/showcase/ShowcaseWriteForm";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "자랑하기 글쓰기 | 제천 수상레저 & 청풍 ATV",
+export const metadata = buildPageMetadata({
+  title: "자랑하기 글쓰기",
   description: "방문 후기와 사진을 등록해 자랑하기 게시판에 공유하세요.",
-};
+  path: "/showcase/write",
+  noIndex: true,
+});
 
 export default function ShowcaseWritePage() {
   return (

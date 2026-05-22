@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CalendarCheck, ShieldCheck } from "@phosphor-icons/react/ssr";
 import { ActivitiesScrollShowcase, type ActivityDetail } from "@/components/home/ActivitiesScrollShowcase";
 import { DepositAccountGuide } from "@/components/reservation/DepositAccountGuide";
+import { buildPageMetadata } from "@/lib/seo";
 import { phoneHref } from "@/lib/site-data";
 
 const activityItems: ActivityDetail[] = [
@@ -188,10 +188,18 @@ const refundRows = [
   ["당일 취소", "환불 불가"],
 ];
 
-export const metadata: Metadata = {
-  title: "즐길거리 | 제천 수상레저 & 청풍 ATV",
+export const metadata = buildPageMetadata({
+  title: "즐길거리",
   description: "수상스키, 웨이크보드, 수상 놀이기구, 모터보트, ATV 이용요금과 예약안내를 확인하세요.",
-};
+  path: "/activities",
+  image: {
+    path: "/images/activity-water-ski.webp",
+    width: 1080,
+    height: 720,
+    alt: "청풍호 수상스키 장비",
+  },
+  keywords: ["제천 수상 놀이기구", "제천 모터보트", "청풍호 웨이크보드"],
+});
 
 export default function ActivitiesPage() {
   return (

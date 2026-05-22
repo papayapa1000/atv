@@ -30,8 +30,6 @@ type MotionProfile = {
   viewportMargin: `${number}px ${number}px ${number}% ${number}px`;
 };
 
-type MotionPreference = "unknown" | "reduce" | "no-preference";
-
 const softEase = [0.16, 1, 0.3, 1] as const;
 
 const profiles = {
@@ -480,30 +478,21 @@ export function PageMotion({ children }: { children: ReactNode }) {
   const scopeRef = useRef<HTMLDivElement>(null);
   const profile = useMemo(() => resolveProfile(pathname), [pathname]);
   const [isDebugMode, setIsDebugMode] = useState(false);
-  const [motionPreference, setMotionPreference] = useState<MotionPreference>("unknown");
+  const [isMotionDisabled, setIsMotionDisabled] = useState(false);
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
-      setIsDebugMode(new URLSearchParams(window.location.search).get("motion") === "debug");
+      const motionParam = new URLSearchParams(window.location.search).get("motion");
+
+      setIsDebugMode(motionParam === "debug");
+      setIsMotionDisabled(motionParam === "off" || motionParam === "reduce");
     });
 
     return () => window.cancelAnimationFrame(frameId);
   }, [pathname]);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updateMotionPreference = () => {
-      setMotionPreference(mediaQuery.matches ? "reduce" : "no-preference");
-    };
-
-    updateMotionPreference();
-    mediaQuery.addEventListener("change", updateMotionPreference);
-
-    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
-  }, []);
-
   const debugScale = 1;
-  const shouldReduceMotion = motionPreference !== "no-preference" && !isDebugMode;
+  const shouldReduceMotion = isMotionDisabled;
 
   useScrollReveals(scopeRef, profile, debugScale, shouldReduceMotion);
   useHomeHeroMotion(scopeRef, pathname, debugScale, shouldReduceMotion);
