@@ -90,8 +90,8 @@ export function StayGuide({ stayPage }: StayGuideProps) {
         </div>
 
         {stayPage.items.length > 0 ? (
-          <div className="depth-panel-quiet mt-12 grid grid-cols-2 gap-px border border-mist bg-mist lg:grid-cols-3">
-            {stayPage.items.map((post) => {
+          <div className="depth-panel-quiet mt-12 grid grid-cols-2 gap-1 lg:grid-cols-3">
+            {stayPage.items.map((post, index) => {
               const coverImageUrl = post.imageUrls[0] ?? "/images/workshop.webp";
 
               return (
@@ -105,6 +105,7 @@ export function StayGuide({ stayPage }: StayGuideProps) {
                     src={coverImageUrl}
                     alt={post.title}
                     fill
+                    priority={index === 0}
                     sizes="(min-width: 1024px) 33vw, 50vw"
                     className="object-cover transition duration-700 group-hover:scale-[1.04]"
                   />

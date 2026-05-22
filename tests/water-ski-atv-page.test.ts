@@ -17,3 +17,12 @@ test("kakao map button uses a filled lake style", () => {
   assert.equal(source.includes("hover:border-forest hover:bg-forest hover:text-white"), true);
   assert.equal(source.includes("border border-lake/20 bg-surface/72 px-5 py-3 text-sm font-bold text-lake"), false);
 });
+
+test("location section uses the updated road address", () => {
+  const source = readFileSync("src/app/water-ski-atv/page.tsx", "utf8");
+  const oldLotAddress = "\uc131\ub0b4\ub9ac 157";
+
+  assert.equal(source.includes("충북 제천시 금성면 청풍호로 1542-5"), true);
+  assert.equal(source.includes(oldLotAddress), false);
+  assert.equal(source.includes("/images/kakao-map-cheongpungho-1542-5.webp"), true);
+});

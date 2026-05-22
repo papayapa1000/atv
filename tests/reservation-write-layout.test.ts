@@ -18,7 +18,8 @@ test("reservation write page uses a compact form layout", () => {
   const formSource = readFileSync("src/components/reservation/ReservationWriteForm.tsx", "utf8");
 
   assert.equal(pageSource.includes('className="px-5 py-10 lg:px-8 lg:py-14"'), true);
-  assert.equal(pageSource.includes("max-w-[1180px] gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]"), true);
+  assert.equal(pageSource.includes('className="mx-auto grid max-w-[1180px] gap-6"'), true);
+  assert.equal(pageSource.includes("lg:grid-cols-[minmax(0,1fr)_20rem]"), true);
   assert.equal(pageSource.includes('className="border border-foreground/12 bg-surface p-4 sm:p-6 lg:p-7"'), true);
   assert.equal(pageSource.includes('className="mt-3 text-2xl font-bold leading-tight sm:text-4xl"'), true);
   assert.equal(pageSource.includes('className="mt-7"'), true);
@@ -29,6 +30,24 @@ test("reservation write page uses a compact form layout", () => {
   assert.equal(formSource.includes('<form action={formAction} className="grid gap-4">'), true);
   assert.equal(formSource.includes("rows={5}"), true);
   assert.equal(formSource.includes("px-5 py-3 text-sm"), true);
+});
+
+test("reservation write page places the account guide horizontally above the form", () => {
+  const pageSource = readFileSync("src/app/reservation/write/page.tsx", "utf8");
+  const accountSource = readFileSync("src/components/reservation/DepositAccountGuide.tsx", "utf8");
+  const accountGuideIndex = pageSource.indexOf('<DepositAccountGuide layout="horizontal" headingLevel="h2" />');
+  const formGridIndex = pageSource.indexOf('className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]"');
+
+  assert.equal(pageSource.includes('import { DepositAccountGuide } from "@/components/reservation/DepositAccountGuide";'), true);
+  assert.equal(accountGuideIndex > -1, true);
+  assert.equal(formGridIndex > -1, true);
+  assert.equal(accountGuideIndex < formGridIndex, true);
+  assert.equal(pageSource.includes('<DepositAccountGuide compact headingLevel="h2" />'), false);
+  assert.equal(accountSource.includes('layout?: "stacked" | "horizontal";'), true);
+  assert.equal(accountSource.includes("lg:grid-cols-[minmax(16rem,0.75fr)_minmax(0,1.25fr)]"), true);
+  assert.equal(accountSource.includes("grid h-full grid-rows-[auto_1fr_auto]"), true);
+  assert.equal(accountSource.includes("grid min-h-10 grid-cols-[4.5rem_minmax(0,1fr)]"), true);
+  assert.equal(accountSource.includes("sm:whitespace-nowrap"), true);
 });
 
 test("reservation write form does not show the helper note strip", () => {

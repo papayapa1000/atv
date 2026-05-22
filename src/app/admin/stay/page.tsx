@@ -13,7 +13,7 @@ import { listAdminStayPosts, type StayPost } from "@/lib/stay/repository";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "주변 숙박 관리 | 제천 ATV & 수상레저",
+  title: "주변 숙박 관리 | 제천 수상레저 & 청풍 ATV",
   robots: {
     index: false,
     follow: false,

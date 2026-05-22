@@ -22,7 +22,7 @@ export function Header() {
           className="flex items-center gap-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           onClick={() => setIsMobileMenuOpen(false)}
         >
-          <span className="font-display text-sm font-bold uppercase tracking-normal sm:text-base">제천 ATV & 수상레저</span>
+          <span className="font-display whitespace-nowrap text-base font-extrabold tracking-normal text-amber-100 sm:text-xl">제천 수상레저 & 청풍 ATV</span>
         </Link>
         <nav aria-label="주요 메뉴" className="hidden items-center gap-6 text-sm font-semibold text-white/78 xl:gap-8 lg:flex">
           {navItems.map((item) =>

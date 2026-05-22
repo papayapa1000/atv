@@ -3,7 +3,7 @@ values (
   'video-files',
   'video-files',
   true,
-  52428800,
+  262144000,
   array['video/mp4', 'video/webm', 'video/quicktime', 'video/x-m4v']
 )
 on conflict (id) do update

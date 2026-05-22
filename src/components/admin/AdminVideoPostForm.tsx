@@ -70,7 +70,7 @@ export function AdminVideoPostForm() {
         />
         {fieldError(state, "videoFile")}
         {fieldError(state, "source")}
-        <p className="mt-2 text-xs font-semibold leading-5 text-foreground/50">영상 파일은 50MB 이하만 등록할 수 있습니다.</p>
+        <p className="mt-2 text-xs font-semibold leading-5 text-foreground/50">영상 파일은 250MB 이하만 등록할 수 있습니다.</p>
       </label>
 
       <label className="block">

@@ -10,7 +10,7 @@ import { getStatusLabel, reservationStatuses } from "@/lib/reservations/validati
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "예약게시판 관리 | 제천 ATV & 수상레저",
+  title: "예약게시판 관리 | 제천 수상레저 & 청풍 ATV",
   robots: {
     index: false,
     follow: false,

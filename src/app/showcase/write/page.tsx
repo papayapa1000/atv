@@ -4,7 +4,7 @@ import { ArrowLeft, ImageSquare } from "@phosphor-icons/react/ssr";
 import { ShowcaseWriteForm } from "@/components/showcase/ShowcaseWriteForm";
 
 export const metadata: Metadata = {
-  title: "자랑하기 글쓰기 | 제천 ATV & 수상레저",
+  title: "자랑하기 글쓰기 | 제천 수상레저 & 청풍 ATV",
   description: "방문 후기와 사진을 등록해 자랑하기 게시판에 공유하세요.",
 };
 
@@ -21,7 +21,7 @@ export default function ShowcaseWritePage() {
               <ArrowLeft aria-hidden="true" className="h-4 w-4" weight="bold" />
               자랑하기로 돌아가기
             </Link>
-            <p className="mt-8 inline-flex border-b border-foreground/18 pb-2 text-xs font-bold uppercase text-lake">
+            <p className="mt-8 flex w-fit border-b border-foreground/18 pb-2 text-xs font-bold uppercase text-lake">
               Showcase Write
             </p>
             <h1 className="mt-5 text-3xl font-bold leading-tight sm:text-5xl">게시글 작성</h1>
@@ -42,6 +42,7 @@ export default function ShowcaseWritePage() {
               <div className="mt-6 space-y-4 text-sm leading-7 text-ink-muted">
                 <p>수상레저, ATV, 단체 방문 현장 사진을 최대 5장까지 첨부할 수 있습니다.</p>
                 <p>각 사진은 8MB 이하의 jpg, png, webp 형식만 지원합니다.</p>
+                <p>영상은 링크만 가능합니다.</p>
               </div>
             </div>
           </aside>

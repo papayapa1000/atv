@@ -10,7 +10,7 @@ import type { ReservationDetailActionState } from "@/lib/reservations/public-typ
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "예약글 확인 | 제천 ATV & 수상레저",
+  title: "예약글 확인 | 제천 수상레저 & 청풍 ATV",
   description: "예약글 비밀번호 확인 후 문의 내용과 답글을 확인하세요.",
 };
 

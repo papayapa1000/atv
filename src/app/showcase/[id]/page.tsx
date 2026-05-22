@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: ShowcaseDetailPageProps): Pro
 
   if (!post) {
     return {
-      title: "자랑하기 상세 | 제천 ATV & 수상레저",
+      title: "자랑하기 상세 | 제천 수상레저 & 청풍 ATV",
     };
   }
 

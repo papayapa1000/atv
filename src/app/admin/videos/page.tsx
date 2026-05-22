@@ -13,7 +13,7 @@ import { requireAdminSession } from "@/lib/admin/session";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "동영상 관리 | 제천 ATV & 수상레저",
+  title: "동영상 관리 | 제천 수상레저 & 청풍 ATV",
   robots: {
     index: false,
     follow: false,
@@ -27,13 +27,13 @@ type AdminVideosPageProps = {
 function getAdminVideoErrorMessage(error: string | undefined) {
   switch (error) {
     case "video-file":
-      return "영상 파일은 50MB 이하의 mp4, webm, mov, m4v 형식으로 등록해 주세요.";
+      return "영상 파일은 250MB 이하의 mp4, webm, mov, m4v 형식으로 등록해 주세요.";
     case "youtube-url":
       return "올바른 유튜브 링크를 입력해 주세요.";
     case "source":
       return "유튜브 링크 또는 영상 파일 중 하나만 등록해 주세요.";
     case "storage-limit":
-      return "영상 파일이 현재 Supabase Storage 업로드 제한을 초과했습니다. 50MB 이하 파일로 압축한 뒤 등록해 주세요.";
+      return "영상 파일이 현재 Supabase Storage 업로드 제한을 초과했습니다. 250MB 이하 파일로 압축한 뒤 등록해 주세요.";
     case "save":
       return "영상 저장 중 오류가 발생했습니다. Supabase Storage와 video_posts 테이블 설정을 확인해 주세요.";
     case "missing-id":

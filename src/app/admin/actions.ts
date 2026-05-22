@@ -489,7 +489,7 @@ export async function createAdminVideoPostAction(
   } catch (error) {
     return {
       message: isSupabaseStorageUploadLimitError(error)
-        ? "영상 파일이 현재 Supabase Storage 업로드 제한을 초과했습니다. 50MB 이하 파일로 압축한 뒤 등록해 주세요."
+        ? "영상 파일이 현재 Supabase Storage 업로드 제한을 초과했습니다. 250MB 이하 파일로 압축한 뒤 등록해 주세요."
         : "동영상 등록에 실패했습니다. Supabase 설정과 video_posts 테이블을 확인해 주세요.",
       errors: {},
       values,

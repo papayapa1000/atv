@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps): Promis
 
   if (!post) {
     return {
-      title: "동영상 상세 | 제천 ATV & 수상레저",
+      title: "동영상 상세 | 제천 수상레저 & 청풍 ATV",
     };
   }
 

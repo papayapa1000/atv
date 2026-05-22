@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { animate, inView, stagger, type AnimationPlaybackControls } from "motion";
-import { MotionConfig, motion, type Transition, useReducedMotion } from "motion/react";
+import { MotionConfig, motion, type Transition } from "motion/react";
 
 type DomReveal = {
   initial: string;
@@ -29,6 +29,8 @@ type MotionProfile = {
   media: DomReveal;
   viewportMargin: `${number}px ${number}px ${number}% ${number}px`;
 };
+
+type MotionPreference = "unknown" | "reduce" | "no-preference";
 
 const softEase = [0.16, 1, 0.3, 1] as const;
 
@@ -363,11 +365,11 @@ function clearHomeHeroStyle(elements: HTMLElement[]) {
   });
 }
 
-function useHomeHeroMotion(scopeRef: React.RefObject<HTMLDivElement | null>, pathname: string, debugScale: number) {
+function useHomeHeroMotion(scopeRef: React.RefObject<HTMLDivElement | null>, pathname: string, debugScale: number, isReducedMotion: boolean) {
   useEffect(() => {
     const scope = scopeRef.current;
 
-    if (!scope || pathname !== "/") {
+    if (!scope || pathname !== "/" || isReducedMotion) {
       return;
     }
 
@@ -383,6 +385,7 @@ function useHomeHeroMotion(scopeRef: React.RefObject<HTMLDivElement | null>, pat
 
     const animatedElements = [heroStage, heroImage, heroCopy, heroSweep, ...heroItems].filter(Boolean) as HTMLElement[];
     const controls: AnimationPlaybackControls[] = [];
+    let isMounted = true;
 
     heroStage.style.clipPath = "polygon(0 0, 100% 0, 100% 0, 0 0)";
     heroStage.style.willChange = "clip-path";
@@ -456,22 +459,28 @@ function useHomeHeroMotion(scopeRef: React.RefObject<HTMLDivElement | null>, pat
     }
 
     void Promise.all(controls.map((control) => control.finished.catch(() => undefined))).then(() => {
+      if (!isMounted) {
+        return;
+      }
+
       clearHomeHeroStyle(animatedElements);
+      window.dispatchEvent(new CustomEvent("home-hero-motion-complete"));
     });
 
     return () => {
+      isMounted = false;
       controls.forEach((control) => control.stop());
       clearHomeHeroStyle(animatedElements);
     };
-  }, [debugScale, pathname, scopeRef]);
+  }, [debugScale, isReducedMotion, pathname, scopeRef]);
 }
 
 export function PageMotion({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const prefersReducedMotion = Boolean(useReducedMotion());
   const scopeRef = useRef<HTMLDivElement>(null);
   const profile = useMemo(() => resolveProfile(pathname), [pathname]);
-  const [isDebugMode, setIsDebugMode] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("motion") === "debug");
+  const [isDebugMode, setIsDebugMode] = useState(false);
+  const [motionPreference, setMotionPreference] = useState<MotionPreference>("unknown");
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
@@ -481,20 +490,31 @@ export function PageMotion({ children }: { children: ReactNode }) {
     return () => window.cancelAnimationFrame(frameId);
   }, [pathname]);
 
-  const debugScale = 1;
-  const shouldReduceMotion = false;
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => {
+      setMotionPreference(mediaQuery.matches ? "reduce" : "no-preference");
+    };
 
-  useScrollReveals(scopeRef, profile, debugScale, shouldReduceMotion && !isDebugMode);
-  useHomeHeroMotion(scopeRef, pathname, debugScale);
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+
+    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  const debugScale = 1;
+  const shouldReduceMotion = motionPreference !== "no-preference" && !isDebugMode;
+
+  useScrollReveals(scopeRef, profile, debugScale, shouldReduceMotion);
+  useHomeHeroMotion(scopeRef, pathname, debugScale, shouldReduceMotion);
 
   return (
-    <MotionConfig reducedMotion="never">
+    <MotionConfig reducedMotion={shouldReduceMotion ? "always" : "never"}>
       <div
         ref={scopeRef}
         className="page-motion-shell"
         data-motion-profile={profile.name}
         data-motion-debug={isDebugMode ? "true" : "false"}
-        data-prefers-reduced-motion={prefersReducedMotion ? "true" : "false"}
       >
         <span className="page-motion-debug" aria-hidden="true">
           Motion {profile.label}
@@ -502,7 +522,7 @@ export function PageMotion({ children }: { children: ReactNode }) {
         <motion.div
           key={pathname}
           className="page-motion-view"
-          initial={shouldReduceMotion && !isDebugMode ? false : profile.pageInitial}
+          initial={shouldReduceMotion ? false : profile.pageInitial}
           animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }}
           transition={profile.pageTransition}
         >

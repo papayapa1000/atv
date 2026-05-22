@@ -2,6 +2,7 @@
 
 import { PencilSimple, X } from "@phosphor-icons/react";
 import { useId, useState } from "react";
+import { createPortal } from "react-dom";
 import { updateAdminStayPostAction } from "@/app/admin/actions";
 import type { StayPost } from "@/lib/stay/repository";
 import { AdminGalleryEditImageFields } from "./AdminGalleryEditImageFields";
@@ -27,7 +28,8 @@ export function AdminStayPostEditModal({ post }: AdminStayPostEditModalProps) {
         수정
       </button>
 
-      {open ? (
+      {open
+        ? createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/48 px-4 py-6 backdrop-blur-sm">
           <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="max-h-[92vh] w-full max-w-2xl overflow-y-auto border border-foreground/14 bg-white p-5 shadow-[0_32px_80px_-44px_rgba(16,34,30,0.55)] sm:p-6">
             <div className="flex items-start justify-between gap-4 border-b border-foreground/10 pb-4">
@@ -103,8 +105,10 @@ export function AdminStayPostEditModal({ post }: AdminStayPostEditModalProps) {
               </div>
             </form>
           </div>
-        </div>
-      ) : null}
+        </div>,
+          document.body,
+        )
+        : null}
     </>
   );
 }

@@ -6,7 +6,7 @@ import { requireAdminSession } from "@/lib/admin/session";
 import { formatStorageBytes, getSupabaseStorageUsageSummary } from "@/lib/supabase/storage-usage";
 
 export const metadata: Metadata = {
-  title: "관리자 대시보드 | 제천 ATV & 수상레저",
+  title: "관리자 대시보드 | 제천 수상레저 & 청풍 ATV",
   robots: {
     index: false,
     follow: false,

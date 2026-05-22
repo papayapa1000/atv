@@ -8,7 +8,7 @@ import { listReservationPostsPage, type ReservationBoardPage } from "@/lib/reser
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "예약게시판 | 제천 ATV & 수상레저",
+  title: "예약게시판 | 제천 수상레저 & 청풍 ATV",
   description: "예약글쓰기에서 접수된 예약 문의를 확인하세요.",
 };
 

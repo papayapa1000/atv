@@ -40,7 +40,7 @@ export type VideoPostValidationOptions = {
 };
 
 const allowedVideoExtensions = [".mp4", ".webm", ".mov", ".m4v"];
-const maxVideoFileSize = 50 * 1024 * 1024;
+const maxVideoFileSize = 250 * 1024 * 1024;
 
 function fieldToString(value: FormDataEntryValue | string | null | undefined) {
   if (typeof value !== "string") {
@@ -77,7 +77,7 @@ function hasAllowedVideoExtension(fileName: string) {
 
 function validateVideoFile(file: File) {
   if (file.size > maxVideoFileSize) {
-    return "영상 파일은 50MB 이하로 등록해 주세요.";
+    return "영상 파일은 250MB 이하로 등록해 주세요.";
   }
 
   if (!file.type.startsWith("video/") && !hasAllowedVideoExtension(file.name)) {

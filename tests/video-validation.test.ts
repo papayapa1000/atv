@@ -69,7 +69,7 @@ test("rejects video files larger than the Supabase Storage bucket limit", () => 
   const oversizedFile = new File(["x"], "large-video.mp4", {
     type: "video/mp4",
   });
-  Object.defineProperty(oversizedFile, "size", { value: 100 * 1024 * 1024 + 1 });
+  Object.defineProperty(oversizedFile, "size", { value: 250 * 1024 * 1024 + 1 });
   const result = validateVideoPostForm({
     title: "테스트 영상",
     youtubeUrl: "",
@@ -81,7 +81,7 @@ test("rejects video files larger than the Supabase Storage bucket limit", () => 
 
   assert.equal(result.ok, false);
   if (!result.ok) {
-    assert.match(result.errors.videoFile ?? "", /50MB/);
+    assert.match(result.errors.videoFile ?? "", /250MB/);
   }
 });
 

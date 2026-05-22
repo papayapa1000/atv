@@ -22,8 +22,10 @@ test("admin video file uploads require Supabase Storage", () => {
   assert.equal(readmeSource.includes("Video file uploads use the public Supabase Storage bucket `video-files`"), true);
   assert.equal(storageMigrationSource.includes("storage.buckets"), true);
   assert.equal(storageMigrationSource.includes("video-files"), true);
-  assert.equal(storageMigrationSource.includes("52428800"), true);
-  assert.equal(storageMigrationSource.includes("104857600"), false);
+  assert.equal(envSource.includes("SUPABASE_STORAGE_QUOTA_GB=100"), true);
+  assert.equal(readmeSource.includes("bucket-level limit to 250 MB"), true);
+  assert.equal(storageMigrationSource.includes("262144000"), true);
+  assert.equal(storageMigrationSource.includes("52428800"), false);
   assert.equal(storageMigrationSource.includes("video/mp4"), true);
   assert.equal(storageMigrationSource.includes("video/webm"), true);
 });

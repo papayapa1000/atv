@@ -2,6 +2,7 @@
 
 import { X, Trash } from "@phosphor-icons/react";
 import { useId, useState } from "react";
+import { createPortal } from "react-dom";
 import { useBodyScrollLock } from "./useBodyScrollLock";
 
 type AdminDeleteConfirmButtonProps = {
@@ -32,7 +33,8 @@ export function AdminDeleteConfirmButton({
         {label}
       </button>
 
-      {open ? (
+      {open
+        ? createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/48 px-4 py-6 backdrop-blur-sm">
           <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="w-full max-w-sm border border-foreground/14 bg-white p-5 shadow-[0_32px_80px_-44px_rgba(16,34,30,0.55)]">
             <div className="flex items-start justify-between gap-4">
@@ -70,8 +72,10 @@ export function AdminDeleteConfirmButton({
               </button>
             </form>
           </div>
-        </div>
-      ) : null}
+        </div>,
+          document.body,
+        )
+        : null}
     </>
   );
 }

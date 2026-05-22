@@ -13,7 +13,7 @@ import { requireAdminSession } from "@/lib/admin/session";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "갤러리 관리 | 제천 ATV & 수상레저",
+  title: "갤러리 관리 | 제천 수상레저 & 청풍 ATV",
   robots: {
     index: false,
     follow: false,

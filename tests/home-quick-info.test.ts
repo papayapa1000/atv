@@ -31,7 +31,7 @@ test("home quick info lists all twelve activity items", () => {
     "웨이크보드",
     "플라이피쉬",
     "바나나보트",
-    "밴드웨곤",
+    "밴드웨건",
     "땅콩보트",
     "빅마블",
     "자이언트마블",
@@ -46,6 +46,7 @@ test("home quick info lists all twelve activity items", () => {
   }
 
   assert.equal(source.includes('title: "놀이기구"'), false);
+  assert.equal(source.includes('title: "밴드웨곤"'), false);
   assert.equal((source.match(/href: "\/activities#/g) ?? []).length, 12);
 });
 
@@ -84,11 +85,12 @@ test("home quick info course selector arrows do not slide on hover", () => {
 test("home quick info operating hours show open and close times", () => {
   const source = readFileSync("src/components/home/QuickInfo.tsx", "utf8");
 
-  assert.equal(source.includes("07:00"), true);
+  assert.equal(source.includes("07:00"), false);
+  assert.equal(source.includes("09:00"), true);
   assert.equal(source.includes("오픈 시간"), true);
   assert.equal(source.includes("19:00"), true);
   assert.equal(source.includes("마감 시간"), true);
-  assert.equal(source.includes("운영 시간은 07:00부터 19:00까지입니다."), true);
+  assert.equal(source.includes("운영 시간은 09:00부터 19:00까지입니다."), true);
 });
 
 test("home quick info detail panel does not show the recommendation label", () => {
@@ -103,4 +105,13 @@ test("home quick info price rows do not show the orange divider tick", () => {
 
   assert.equal(source.includes("h-px w-10 shrink-0 bg-sun"), false);
   assert.equal(source.includes("service.prices.map"), true);
+});
+
+test("home quick info mirrors the updated water sports and ATV pricing", () => {
+  const source = readFileSync("src/components/home/QuickInfo.tsx", "utf8");
+
+  assert.equal(source.includes('prices: ["초보강습 80,000원", "아웃보트 28,000원", "매직보트 33,000원"]'), true);
+  assert.equal(source.includes('prices: ["1인용 30,000원", "2인용 버기카 60,000원"]'), true);
+  assert.equal(source.includes('prices: ["초보 80,000원", "중급 28,000원"]'), false);
+  assert.equal(source.includes('prices: ["1인용 25,000원", "2인용 25,000원"]'), false);
 });

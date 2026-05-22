@@ -4,7 +4,7 @@ import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
 import { getAdminSession } from "@/lib/admin/session";
 
 export const metadata: Metadata = {
-  title: "관리자 로그인 | 제천 ATV & 수상레저",
+  title: "관리자 로그인 | 제천 수상레저 & 청풍 ATV",
   robots: {
     index: false,
     follow: false,

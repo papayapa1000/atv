@@ -6,7 +6,9 @@ test("home header does not render the JC logo badge", () => {
   const source = readFileSync("src/components/home/Header.tsx", "utf8");
 
   assert.equal(source.includes(">JC</span>"), false);
-  assert.equal(source.includes("제천 ATV & 수상레저"), true);
+  assert.equal(source.includes("제천 수상레저 & 청풍 ATV"), true);
+  assert.equal(source.includes("text-base font-extrabold"), true);
+  assert.equal(source.includes("text-amber-100"), true);
 });
 
 test("header dropdown sub menu links do not use an orange focus border", () => {

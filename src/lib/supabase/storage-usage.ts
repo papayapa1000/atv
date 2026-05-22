@@ -36,7 +36,7 @@ export type SupabaseStorageUsageSummary =
       message: string;
     };
 
-const defaultStorageQuotaGb = 1;
+const defaultStorageQuotaGb = 100;
 
 function getStorageQuotaBytes() {
   const rawQuotaGb = process.env.SUPABASE_STORAGE_QUOTA_GB;
@@ -45,7 +45,7 @@ function getStorageQuotaBytes() {
 
   return {
     quotaBytes: Math.round(safeQuotaGb * 1024 * 1024 * 1024),
-    quotaSource: rawQuotaGb ? "SUPABASE_STORAGE_QUOTA_GB" : "Free plan 기본 1GB",
+    quotaSource: rawQuotaGb ? "SUPABASE_STORAGE_QUOTA_GB" : "Supabase Pro 기본 100GB",
   };
 }
 

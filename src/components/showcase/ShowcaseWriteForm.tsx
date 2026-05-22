@@ -10,6 +10,9 @@ const initialShowcaseActionState: ShowcaseActionState = {
   values: {},
 };
 
+const showcaseContentPlaceholder =
+  "방문 후기, 이용한 레저, 공유할 URL을 함께 입력해 주세요.\n자신의 인스타그램, 페이스북 등 SNS URL을 공유해주시면 좋습니다.";
+
 function fieldError(state: ShowcaseActionState, name: string) {
   const message = state.errors[name];
 
@@ -71,7 +74,7 @@ export function ShowcaseWriteForm() {
           rows={10}
           required
           defaultValue={state.values.content ?? ""}
-          placeholder="방문 후기, 이용한 레저, 공유할 URL을 함께 입력해 주세요."
+          placeholder={showcaseContentPlaceholder}
           className="mt-2 w-full resize-y border border-foreground/14 bg-white px-4 py-3 text-base leading-7 text-foreground outline-none transition focus:border-foreground focus:ring-2 focus:ring-sun/20"
         />
         {fieldError(state, "content")}

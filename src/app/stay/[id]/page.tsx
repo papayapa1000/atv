@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: StayDetailPageProps): Promise
 
   if (!post) {
     return {
-      title: "주변 숙박 상세 | 제천 ATV & 수상레저",
+      title: "주변 숙박 상세 | 제천 수상레저 & 청풍 ATV",
     };
   }
 

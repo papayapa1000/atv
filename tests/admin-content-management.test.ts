@@ -33,6 +33,10 @@ test("admin gallery posts can be updated and deleted from the gallery management
   assert.equal(deleteConfirmSource.includes('role="dialog"'), true);
   assert.equal(editModalSource.includes("useBodyScrollLock(open)"), true);
   assert.equal(deleteConfirmSource.includes("useBodyScrollLock(open)"), true);
+  assert.equal(editModalSource.includes("createPortal("), true);
+  assert.equal(editModalSource.includes("document.body"), true);
+  assert.equal(deleteConfirmSource.includes("createPortal("), true);
+  assert.equal(deleteConfirmSource.includes("document.body"), true);
   assert.equal(scrollLockSource.includes("document.body.style.overflow = \"hidden\""), true);
 });
 
@@ -52,7 +56,7 @@ test("admin video posts can be updated and deleted from the video management pag
   assert.equal(repositorySource.includes("export async function updateVideoPost"), true);
   assert.equal(repositorySource.includes("export async function deleteVideoPost"), true);
   assert.equal(pageSource.includes("getAdminVideoErrorMessage"), true);
-  assert.equal(pageSource.includes("영상 파일은 50MB 이하"), true);
+  assert.equal(pageSource.includes("영상 파일은 250MB 이하"), true);
   assert.equal(pageSource.includes("영상 저장 중 오류가 발생했습니다"), true);
   assert.equal(pageSource.includes("AdminVideoPostEditModal"), true);
   assert.equal(pageSource.includes("AdminDeleteConfirmButton"), true);
@@ -67,6 +71,8 @@ test("admin video posts can be updated and deleted from the video management pag
   assert.equal(editModalSource.includes("업로드 중"), true);
   assert.equal(editModalSource.includes('role="dialog"'), true);
   assert.equal(editModalSource.includes("useBodyScrollLock(open)"), true);
+  assert.equal(editModalSource.includes("createPortal("), true);
+  assert.equal(editModalSource.includes("document.body"), true);
 });
 
 test("admin stay posts can be updated and deleted from the stay management page", () => {
@@ -102,6 +108,8 @@ test("admin stay posts can be updated and deleted from the stay management page"
   assert.equal(stayUpdateSource.includes("finalImageCount > 10"), true);
   assert.equal(editModalSource.includes('role="dialog"'), true);
   assert.equal(editModalSource.includes("useBodyScrollLock(open)"), true);
+  assert.equal(editModalSource.includes("createPortal("), true);
+  assert.equal(editModalSource.includes("document.body"), true);
 });
 
 test("admin delete actions use a reusable confirmation modal", () => {

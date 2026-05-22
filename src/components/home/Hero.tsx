@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { ArrowRight, PhoneCall } from "@phosphor-icons/react/ssr";
+import { HeroImageSlider } from "@/components/home/HeroImageSlider";
+import { mainHeroIntroSlide, mainHeroSlides } from "@/lib/main-hero-slides";
 import { phoneHref } from "@/lib/site-data";
 
 export function Hero() {
@@ -7,7 +9,7 @@ export function Hero() {
     <section className="home-hero-section relative isolate overflow-hidden bg-background text-foreground">
       <div className="home-hero-stage reveal relative min-h-[calc(100svh-5rem)] overflow-hidden bg-mist sm:min-h-[calc(100svh-5.5rem)]">
         <Image
-          src="/images/hero-sunset-boat.webp"
+          src="/images/main-slider/main-hero-00.webp"
           alt="청풍호 석양을 가로지르는 모터보트"
           fill
           preload
@@ -15,9 +17,10 @@ export function Hero() {
           sizes="100vw"
           className="home-hero-image hero-kenburns object-cover object-[58%_50%]"
         />
+        <HeroImageSlider introSlide={mainHeroIntroSlide} slides={mainHeroSlides} />
         <span className="home-hero-light-sweep" aria-hidden="true" />
         <div className="relative z-10 mx-auto min-h-[calc(100svh-5rem)] max-w-[1440px] px-5 pb-8 pt-24 sm:min-h-[calc(100svh-5.5rem)] sm:px-8 sm:pt-20 lg:px-12">
-          <div className="home-hero-copy mt-0 max-w-[36rem] rounded-[1.5rem] border border-surface/70 bg-surface/64 p-4 shadow-[0_18px_62px_-52px_rgba(7,59,58,0.42)] backdrop-blur-sm sm:p-5 lg:mt-0 lg:max-w-[31rem] lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-0">
+          <div className="home-hero-copy mt-0 max-w-[36rem] lg:mt-0 lg:max-w-[31rem]">
             <h1 className="home-hero-title headline-tight text-balance break-keep-all text-[2.1rem] font-black leading-[1.04] sm:text-5xl lg:text-[3.05rem] lg:[text-shadow:0_2px_24px_rgba(255,253,250,0.9)]">
               제천 청풍호에서 즐기는
               <span className="block">수상레저와 ATV</span>

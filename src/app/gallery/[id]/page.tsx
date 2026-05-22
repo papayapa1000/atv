@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: GalleryDetailPageProps): Prom
 
   if (!post) {
     return {
-      title: "갤러리 상세 | 제천 ATV & 수상레저",
+      title: "갤러리 상세 | 제천 수상레저 & 청풍 ATV",
     };
   }
 

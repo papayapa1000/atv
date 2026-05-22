@@ -17,7 +17,7 @@ export function AdminTopbar({ active = "dashboard" }: AdminTopbarProps) {
     <header className="border-b border-white/10 bg-deep px-5 py-4 text-foam lg:px-8">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <Link href="/admin/dashboard" className="text-base font-semibold">
-          제천 ATV & 수상레저 관리자
+          제천 수상레저 & 청풍 ATV 관리자
         </Link>
         <nav aria-label="관리자 메뉴" className="flex gap-2 overflow-x-auto text-sm font-semibold text-foam/72">
           {adminNavItems.map((item) => (

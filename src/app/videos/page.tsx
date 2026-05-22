@@ -4,7 +4,7 @@ import { VideoGuide } from "@/components/home/VideoGuide";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "동영상 | 제천 ATV & 수상레저",
+  title: "동영상 | 제천 수상레저 & 청풍 ATV",
   description: "청풍호 수상레저와 ATV 현장 영상을 확인하세요.",
 };
 

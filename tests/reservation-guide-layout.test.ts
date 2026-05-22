@@ -28,7 +28,26 @@ test("reservation guide uses a redesigned information layout", () => {
   assert.equal(source.includes("예약 절차"), true);
   assert.equal(source.includes("안전 안내"), true);
   assert.equal(source.includes("환불규정"), true);
+  assert.equal(source.includes("09:00 - 19:00"), true);
+  assert.equal(source.includes("07:00 - 19:00"), false);
   assert.equal(source.includes("border border-mist bg-white p-6 shadow-[0_18px_34px_-26px_rgba(75,85,99,0.62)]"), true);
   assert.equal(source.includes("border border-sun/28 bg-sun/12 px-3 py-2 text-deep"), false);
   assert.equal(source.includes("bg-white/95 p-6 text-foreground"), false);
+});
+
+test("reservation guide shows separate deposit accounts by activity type", () => {
+  const source = readFileSync("src/components/home/ReservationGuide.tsx", "utf8");
+  const accountSource = readFileSync("src/components/reservation/DepositAccountGuide.tsx", "utf8");
+  const dataSource = readFileSync("src/lib/site-data.ts", "utf8");
+
+  assert.equal(source.includes("<DepositAccountGuide"), true);
+  assert.equal(dataSource.includes("장완주"), true);
+  assert.equal(dataSource.includes("국민은행"), true);
+  assert.equal(dataSource.includes("702701-01-514922"), true);
+  assert.equal(dataSource.includes("제천수상레저(주)"), true);
+  assert.equal(dataSource.includes("농협"), true);
+  assert.equal(dataSource.includes("351-1008-4485-63"), true);
+  assert.equal(dataSource.includes("ATV 예약금"), true);
+  assert.equal(dataSource.includes("ATV 외 모든 종목"), true);
+  assert.equal(accountSource.includes("depositAccounts.map"), true);
 });

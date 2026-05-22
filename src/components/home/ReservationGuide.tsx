@@ -1,4 +1,5 @@
 import { ArrowRight, CheckCircle, Clock, PhoneCall, ShieldCheck } from "@phosphor-icons/react/ssr";
+import { DepositAccountGuide } from "@/components/reservation/DepositAccountGuide";
 import { phoneHref, refundRules, reservationFields, reservationSteps, safetyNotes } from "@/lib/site-data";
 import { SectionHeading } from "./SectionHeading";
 
@@ -26,7 +27,7 @@ export function ReservationGuide() {
                   예약 전 확인할 내용
                 </h2>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-ink-muted">
-                  예약금 50,000원 선입금 후 예약자 정보와 이용하실 레저를 남겨 주세요. 기상과 현장 상황에 따라 시간이 조정될 수 있어 방문 전 확인이 필요합니다.
+                  예약금 50,000원 선입금 후 예약자 정보와 이용하실 레저를 남겨 주세요. ATV와 수상레저 계좌가 다르므로 입금 전 종목별 계좌를 먼저 확인해 주세요.
                 </p>
               </div>
               <a
@@ -42,7 +43,7 @@ export function ReservationGuide() {
             <dl className="mt-7 grid gap-3 md:grid-cols-3">
               <div className="border border-lake/14 bg-foam px-4 py-4">
                 <dt className="text-xs font-bold uppercase text-lake">운영 시간</dt>
-                <dd className="numeric mt-2 text-lg font-extrabold">07:00 - 19:00</dd>
+                <dd className="numeric mt-2 text-lg font-extrabold">09:00 - 19:00</dd>
               </div>
               <div className="border border-lake/14 bg-foam px-4 py-4">
                 <dt className="text-xs font-bold uppercase text-lake">예약금</dt>
@@ -85,6 +86,10 @@ export function ReservationGuide() {
               ))}
             </ol>
           </article>
+        </div>
+
+        <div className="mt-5">
+          <DepositAccountGuide />
         </div>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)]">

@@ -18,6 +18,8 @@ test("admin dashboard shows Supabase storage usage and available capacity", () =
   assert.equal(dashboardSource.includes("로컬 fallback 업로드"), false);
   assert.equal(dashboardSource.includes("스토리지 사용량을 확인하지 못했습니다"), true);
   assert.equal(storageUsageSource.includes("SUPABASE_STORAGE_QUOTA_GB"), true);
+  assert.equal(storageUsageSource.includes("const defaultStorageQuotaGb = 100"), true);
+  assert.equal(storageUsageSource.includes("Supabase Pro 기본 100GB"), true);
   assert.equal(storageUsageSource.includes("getManagedStorageBucketNames"), true);
   assert.equal(storageUsageSource.includes("SUPABASE_GALLERY_IMAGES_BUCKET"), true);
   assert.equal(storageUsageSource.includes("SUPABASE_SHOWCASE_IMAGES_BUCKET"), true);

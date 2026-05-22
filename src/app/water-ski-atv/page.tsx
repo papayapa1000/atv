@@ -4,7 +4,7 @@ import { ArrowRight, MapPin } from "@phosphor-icons/react/ssr";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { NearbySlider, type NearbySpot } from "@/components/home/NearbySlider";
 
-const venueAddress = "충청북도 제천시 금성면 성내리 157";
+const venueAddress = "충북 제천시 금성면 청풍호로 1542-5";
 const encodedAddress = encodeURIComponent(venueAddress);
 
 const nearbySpots: NearbySpot[] = [
@@ -74,7 +74,7 @@ const transportGuides = [
   {
     title: "자가용 이용 시",
     lines: [
-      "내비게이션 주소: 충청북도 제천시 금성면 성내리 157",
+      "내비게이션 주소: 충북 제천시 금성면 청풍호로 1542-5",
       "청풍호·금성면 방면 도로를 따라 진입합니다.",
     ],
   },
@@ -82,7 +82,7 @@ const transportGuides = [
     title: "버스 이용 시",
     lines: [
       "동서울터미널(강변역) 또는 서울고속버스터미널에서 제천행 버스 이용",
-      "제천역에서 960번 승차 후 성내리 하차",
+      "제천역에서 금성면·청풍 방면 버스 노선 확인 후 인근 정류장 하차",
     ],
   },
   {
@@ -92,7 +92,7 @@ const transportGuides = [
 ];
 
 export const metadata: Metadata = {
-  title: "수상스키/ATV | 제천 ATV & 수상레저",
+  title: "수상스키/ATV | 제천 수상레저 & 청풍 ATV",
   description: "제천 청풍호 수상스키, 웨이크보드, ATV 코스와 인사말, 주변관광지, 찾아오시는 길을 확인하세요.",
 };
 
@@ -183,12 +183,12 @@ export default function WaterSkiAtvPage() {
               href={`https://map.kakao.com/?q=${encodedAddress}`}
               target="_blank"
               rel="noreferrer"
-              aria-label="카카오맵에서 충청북도 제천시 금성면 성내리 157 보기"
+              aria-label="카카오맵에서 충북 제천시 금성면 청풍호로 1542-5 보기"
               className="image-lift relative block min-h-[320px] overflow-hidden bg-mist"
             >
               <Image
-                src="/images/kakao-map-seongnaeri-157.webp"
-                alt="카카오맵에서 본 제천수상레저 주변 지도"
+                src="/images/kakao-map-cheongpungho-1542-5.webp"
+                alt="카카오맵에서 본 제천 수상레저 & 청풍 ATV 주변 지도"
                 fill
                 sizes="(min-width: 1024px) 28vw, 100vw"
                 className="object-cover"
