@@ -82,16 +82,23 @@ test("hero text copy does not use a translucent panel background", () => {
   assert.equal(source.includes("rounded-[1.5rem]"), false);
 });
 
-test("hero description alone uses a subtle text background without a hero scrim", () => {
+test("hero title and description use subtle text backgrounds without a hero scrim", () => {
   const heroSource = readFileSync("src/components/home/Hero.tsx", "utf8");
   const cssSource = readFileSync("src/app/globals.css", "utf8");
+  const titleBlock = cssSource.match(/\.home-hero-title\s*\{[^}]+\}/s)?.[0] ?? "";
   const descriptionBlock = cssSource.match(/\.home-hero-description\s*\{[^}]+\}/s)?.[0] ?? "";
 
   assert.equal(heroSource.includes("home-hero-readability-scrim"), false);
   assert.equal(cssSource.includes(".home-hero-readability-scrim"), false);
+  assert.equal(titleBlock.includes(".home-hero-title"), true);
+  assert.equal(titleBlock.includes("display: inline-block"), true);
+  assert.equal(titleBlock.includes("background: rgba(255, 253, 248, 0.46)"), true);
+  assert.equal(titleBlock.includes("backdrop-filter: blur(2px)"), true);
+  assert.equal(titleBlock.includes("box-shadow"), true);
   assert.equal(descriptionBlock.includes(".home-hero-description"), true);
   assert.equal(descriptionBlock.includes("display: inline-block"), true);
-  assert.equal(descriptionBlock.includes("background: rgba(255, 253, 248, 0.32)"), true);
+  assert.equal(descriptionBlock.includes("background: rgba(255, 253, 248, 0.52)"), true);
+  assert.equal(descriptionBlock.includes("color: rgba(16, 34, 30, 0.88)"), true);
   assert.equal(descriptionBlock.includes("backdrop-filter: blur(2px)"), true);
   assert.equal(descriptionBlock.includes("border-radius: 0.9rem"), true);
   assert.equal(descriptionBlock.includes("box-shadow"), true);
