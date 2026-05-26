@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createReservationPost } from "@/lib/reservations/repository";
 import { normalizeReservationForm, validateReservationForm } from "@/lib/reservations/validation";
+import { sendReservationCreatedNotification } from "@/lib/notifications/reservation-email";
 
 export type ReservationActionState = {
   message: string;
@@ -45,7 +46,16 @@ export async function createReservationAction(
   }
 
   try {
-    await createReservationPost(result.data);
+    const created = await createReservationPost(result.data);
+
+    try {
+      await sendReservationCreatedNotification({
+        reservation: result.data,
+        reservationId: created?.id,
+      });
+    } catch (error) {
+      console.error("Reservation notification email failed", error);
+    }
   } catch (error) {
     console.error("Reservation insert failed", error);
 

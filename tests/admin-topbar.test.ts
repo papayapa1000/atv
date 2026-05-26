@@ -31,12 +31,13 @@ test("admin dashboard cards follow the same order as the admin menu", () => {
   const videosIndex = source.indexOf('label: "동영상"');
   const showcaseIndex = source.indexOf('label: "자랑하기"');
   const stayIndex = source.indexOf('label: "주변 숙박"');
-  const noticesIndex = source.indexOf('label: "공지사항"');
+  const settingsIndex = source.indexOf('label: "설정"');
 
   assert.equal(reservationIndex > -1, true);
   assert.equal(reservationIndex < galleryIndex, true);
   assert.equal(galleryIndex < videosIndex, true);
   assert.equal(videosIndex < showcaseIndex, true);
   assert.equal(showcaseIndex < stayIndex, true);
-  assert.equal(stayIndex < noticesIndex, true);
+  assert.equal(stayIndex < settingsIndex, true);
+  assert.equal(source.includes('label: "공지사항"'), false);
 });

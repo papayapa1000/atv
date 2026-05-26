@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { issueAdminSession, requireAdminSession, clearAdminSession } from "@/lib/admin/session";
+import { normalizeReservationEmailSettingsForm, validateReservationEmailSettings } from "@/lib/admin/notification-settings";
+import { getReservationEmailDeliverySettings, updateReservationEmailSettings } from "@/lib/admin/notification-settings-repository";
 import { deleteReservationPost, findAdminUser, updateReservationAdminFields } from "@/lib/admin/repository";
 import { normalizeAdminReservationUpdate, validateAdminReservationUpdate } from "@/lib/admin/validation";
 import { createGalleryPost, deleteGalleryPost, updateGalleryPost } from "@/lib/gallery/repository";
@@ -122,6 +124,44 @@ export async function deleteAdminReservationAction(formData: FormData) {
   revalidatePath("/reservation/board");
   revalidatePath(`/reservation/board/${id}`);
   redirect("/admin/reservations?deleted=1");
+}
+
+export async function updateAdminEmailSettingsAction(formData: FormData) {
+  await requireAdminSession();
+  const existingSettings = await getReservationEmailDeliverySettings();
+
+  const normalized = normalizeReservationEmailSettingsForm({
+    reservationEmailEnabled: formData.get("reservationEmailEnabled"),
+    reservationRecipientEmail: formData.get("reservationRecipientEmail"),
+    smtpHost: formData.get("smtpHost"),
+    smtpPort: formData.get("smtpPort"),
+    smtpSecure: formData.get("smtpSecure"),
+    smtpUser: formData.get("smtpUser"),
+    smtpPassword: formData.get("smtpPassword"),
+    smtpFrom: formData.get("smtpFrom"),
+    smtpPasswordConfigured: existingSettings.smtpPasswordConfigured,
+  });
+  const merged = {
+    ...normalized,
+    smtpPassword: normalized.smtpPassword || existingSettings.smtpPassword,
+    smtpPasswordConfigured: Boolean(normalized.smtpPassword || existingSettings.smtpPassword),
+  };
+  const result = validateReservationEmailSettings(merged, {
+    requireSmtpPassword: merged.reservationEmailEnabled,
+  });
+
+  if (!result.ok) {
+    redirect("/admin/settings?error=1");
+  }
+
+  try {
+    await updateReservationEmailSettings(result.data);
+  } catch {
+    redirect("/admin/settings?error=1");
+  }
+
+  revalidatePath("/admin/settings");
+  redirect("/admin/settings?saved=1");
 }
 
 export async function deleteAdminShowcasePostAction(formData: FormData) {

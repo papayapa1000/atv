@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BellSimple, CalendarCheck, ChatCircleText, HouseLine, ImageSquare, Video } from "@phosphor-icons/react/ssr";
+import { CalendarCheck, ChatCircleText, GearSix, HouseLine, ImageSquare, Video } from "@phosphor-icons/react/ssr";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { requireAdminSession } from "@/lib/admin/session";
 import { formatStorageBytes, getSupabaseStorageUsageSummary } from "@/lib/supabase/storage-usage";
@@ -52,11 +52,11 @@ const menuItems = [
     enabled: true,
   },
   {
-    label: "공지사항",
-    href: "/admin/notices",
-    description: "추후 공지사항 작성과 수정 기능을 연결합니다.",
-    icon: BellSimple,
-    enabled: false,
+    label: "설정",
+    href: "/admin/settings",
+    description: "예약 알림 메일 수신 주소와 알림 사용 여부를 관리합니다.",
+    icon: GearSix,
+    enabled: true,
   },
 ] as const;
 

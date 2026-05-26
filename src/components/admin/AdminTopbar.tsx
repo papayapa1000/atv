@@ -6,10 +6,11 @@ const adminNavItems = [
   { label: "동영상", href: "/admin/videos", enabled: true },
   { label: "자랑하기", href: "/admin/showcase", enabled: true },
   { label: "주변 숙박", href: "/admin/stay", enabled: true },
+  { label: "설정", href: "/admin/settings", enabled: true },
 ] as const;
 
 type AdminTopbarProps = {
-  active?: "dashboard" | "notices" | "reservations" | "showcase" | "gallery" | "stay" | "videos";
+  active?: "dashboard" | "reservations" | "showcase" | "gallery" | "stay" | "videos" | "settings";
 };
 
 export function AdminTopbar({ active = "dashboard" }: AdminTopbarProps) {
