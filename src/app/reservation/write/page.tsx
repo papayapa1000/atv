@@ -18,7 +18,7 @@ export default function ReservationWritePage() {
       <ReservationSubnav active="write" />
       <section className="px-5 py-10 lg:px-8 lg:py-14">
         <div className="mx-auto grid max-w-[1180px] gap-6">
-          <DepositAccountGuide layout="horizontal" headingLevel="h2" />
+          <DepositAccountGuide layout="horizontal" headingLevel="h2" wideFirstAccount />
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
             <div className="border border-foreground/12 bg-surface p-4 sm:p-6 lg:p-7">
@@ -38,7 +38,7 @@ export default function ReservationWritePage() {
                 <div className="mt-4 space-y-3 text-xs leading-6 text-white/84">
                   <p>저희 제천 수상레저 & 청풍 ATV는 선입금 방식으로 예약을 받고 있습니다.</p>
                   <p>예약금 5만원을 선입금하신 뒤 양식에 맞춰 예약문의 게시판에 남겨 주시면 확인 후 연락드립니다.</p>
-                  <p>ATV와 그 외 종목의 입금 계좌가 다르니 상단 계좌 안내를 먼저 확인해 주세요.</p>
+                  <p>수상레저와 ATV의 입금 계좌가 다르니 상단 계좌 안내를 먼저 확인해 주세요.</p>
                   <p>예약일 변경은 최소 1일 전 게시판 또는 전화로 알려 주세요.</p>
                 </div>
               </div>

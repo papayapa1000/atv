@@ -35,7 +35,7 @@ test("reservation write page uses a compact form layout", () => {
 test("reservation write page places the account guide horizontally above the form", () => {
   const pageSource = readFileSync("src/app/reservation/write/page.tsx", "utf8");
   const accountSource = readFileSync("src/components/reservation/DepositAccountGuide.tsx", "utf8");
-  const accountGuideIndex = pageSource.indexOf('<DepositAccountGuide layout="horizontal" headingLevel="h2" />');
+  const accountGuideIndex = pageSource.indexOf('<DepositAccountGuide layout="horizontal" headingLevel="h2" wideFirstAccount />');
   const formGridIndex = pageSource.indexOf('className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]"');
 
   assert.equal(pageSource.includes('import { DepositAccountGuide } from "@/components/reservation/DepositAccountGuide";'), true);
@@ -44,9 +44,13 @@ test("reservation write page places the account guide horizontally above the for
   assert.equal(accountGuideIndex < formGridIndex, true);
   assert.equal(pageSource.includes('<DepositAccountGuide compact headingLevel="h2" />'), false);
   assert.equal(accountSource.includes('layout?: "stacked" | "horizontal";'), true);
+  assert.equal(accountSource.includes("wideFirstAccount?: boolean;"), true);
   assert.equal(accountSource.includes("lg:grid-cols-[minmax(16rem,0.75fr)_minmax(0,1.25fr)]"), true);
+  assert.equal(accountSource.includes("lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"), true);
+  assert.equal(accountSource.includes("lg:grid-cols-2"), true);
   assert.equal(accountSource.includes("grid h-full grid-rows-[auto_1fr_auto]"), true);
   assert.equal(accountSource.includes("grid min-h-10 grid-cols-[4.5rem_minmax(0,1fr)]"), true);
+  assert.equal(accountSource.includes('isAtv ? "text-sm lg:pr-4" : "text-base"'), true);
   assert.equal(accountSource.includes("sm:whitespace-nowrap"), true);
 });
 

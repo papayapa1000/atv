@@ -105,7 +105,7 @@ const activityItems: ActivityDetail[] = [
     title: "자이언트마블",
     english: "Giant Marble",
     category: "Water Ride",
-    image: "/images/activity-big-marble.webp",
+    image: "/images/activity-giant-marble.webp",
     alt: "자이언트마블 수상 놀이기구",
     quote: "더 큰 탑승감으로 물살 위 움직임을 크게 느낄 수 있습니다.",
     description:
@@ -117,7 +117,7 @@ const activityItems: ActivityDetail[] = [
     title: "G-Ral",
     english: "Thrill Ride",
     category: "Water Ride",
-    image: "/images/activity-bandwagon.webp",
+    image: "/images/activity-g-ral.webp",
     alt: "스릴형 수상 놀이기구",
     quote: "강한 방향 전환과 빠른 견인감이 중심인 스릴형 놀이기구입니다.",
     description:
@@ -129,7 +129,7 @@ const activityItems: ActivityDetail[] = [
     title: "핵사곤",
     english: "Hexagon",
     category: "Water Ride",
-    image: "/images/activity-big-marble.webp",
+    image: "/images/activity-hexagon.webp",
     alt: "핵사곤 수상 놀이기구",
     quote: "여럿이 함께 타기 좋아 단체 일정에 넣기 좋은 코스입니다.",
     description:

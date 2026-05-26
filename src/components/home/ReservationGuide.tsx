@@ -27,7 +27,7 @@ export function ReservationGuide() {
                   예약 전 확인할 내용
                 </h2>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-ink-muted">
-                  예약금 50,000원 선입금 후 예약자 정보와 이용하실 레저를 남겨 주세요. ATV와 수상레저 계좌가 다르므로 입금 전 종목별 계좌를 먼저 확인해 주세요.
+                  예약금 50,000원 선입금 후 예약자 정보와 이용하실 레저를 남겨 주세요. 수상레저와 ATV 계좌가 다르므로 입금 전 종목별 계좌를 먼저 확인해 주세요.
                 </p>
               </div>
               <a
@@ -89,7 +89,7 @@ export function ReservationGuide() {
         </div>
 
         <div className="mt-5">
-          <DepositAccountGuide />
+          <DepositAccountGuide wideFirstAccount />
         </div>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)]">

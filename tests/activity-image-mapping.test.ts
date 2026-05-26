@@ -10,6 +10,9 @@ const publicImageMappings = [
   "activity-bandwagon.webp",
   "activity-peanut-boat.webp",
   "activity-big-marble.webp",
+  "activity-giant-marble.webp",
+  "activity-g-ral.webp",
+  "activity-hexagon.webp",
 ] as const;
 
 function objectContaining(source: string, marker: string) {
@@ -41,6 +44,9 @@ test("activities page uses item-specific images for matched ride names", () => {
   assert.match(objectContaining(source, 'id: "bandwagon"'), /image: "\/images\/activity-bandwagon\.webp"/);
   assert.match(objectContaining(source, 'id: "peanut-boat"'), /image: "\/images\/activity-peanut-boat\.webp"/);
   assert.match(objectContaining(source, 'id: "big-marble"'), /image: "\/images\/activity-big-marble\.webp"/);
+  assert.match(objectContaining(source, 'id: "giant-marble"'), /image: "\/images\/activity-giant-marble\.webp"/);
+  assert.match(objectContaining(source, 'id: "g-ral"'), /image: "\/images\/activity-g-ral\.webp"/);
+  assert.match(objectContaining(source, 'id: "hexagon"'), /image: "\/images\/activity-hexagon\.webp"/);
 });
 
 test("home quick info and program data mirror the matched activity images", () => {
@@ -49,7 +55,13 @@ test("home quick info and program data mirror the matched activity images", () =
 
   assert.match(quickInfoSource, /image: "\/images\/activity-wakeboard\.webp"[\s\S]{0,300}href: "\/activities#wakeboard"/);
   assert.match(quickInfoSource, /image: "\/images\/activity-peanut-boat\.webp"[\s\S]{0,300}href: "\/activities#peanut-boat"/);
+  assert.match(quickInfoSource, /image: "\/images\/activity-giant-marble\.webp"[\s\S]{0,300}href: "\/activities#giant-marble"/);
+  assert.match(quickInfoSource, /image: "\/images\/activity-g-ral\.webp"[\s\S]{0,300}href: "\/activities#g-ral"/);
+  assert.match(quickInfoSource, /image: "\/images\/activity-hexagon\.webp"[\s\S]{0,300}href: "\/activities#hexagon"/);
 
   assert.match(siteDataSource, /eyebrow: "Wakeboarding"[\s\S]{0,300}image: "\/images\/activity-wakeboard\.webp"/);
   assert.match(siteDataSource, /eyebrow: "Peanut Boat"[\s\S]{0,300}image: "\/images\/activity-peanut-boat\.webp"/);
+  assert.match(siteDataSource, /eyebrow: "Giant Marble"[\s\S]{0,300}image: "\/images\/activity-giant-marble\.webp"/);
+  assert.match(siteDataSource, /eyebrow: "Thrill Ride"[\s\S]{0,300}image: "\/images\/activity-g-ral\.webp"/);
+  assert.match(siteDataSource, /eyebrow: "Hexagon"[\s\S]{0,300}image: "\/images\/activity-hexagon\.webp"/);
 });

@@ -40,14 +40,19 @@ test("reservation guide shows separate deposit accounts by activity type", () =>
   const accountSource = readFileSync("src/components/reservation/DepositAccountGuide.tsx", "utf8");
   const dataSource = readFileSync("src/lib/site-data.ts", "utf8");
 
-  assert.equal(source.includes("<DepositAccountGuide"), true);
+  assert.equal(source.includes("<DepositAccountGuide wideFirstAccount />"), true);
   assert.equal(dataSource.includes("장완주"), true);
   assert.equal(dataSource.includes("국민은행"), true);
   assert.equal(dataSource.includes("702701-01-514922"), true);
   assert.equal(dataSource.includes("제천수상레저(주)"), true);
   assert.equal(dataSource.includes("농협"), true);
   assert.equal(dataSource.includes("351-1008-4485-63"), true);
+  assert.equal(dataSource.includes("수상레저 예약금"), true);
   assert.equal(dataSource.includes("ATV 예약금"), true);
-  assert.equal(dataSource.includes("ATV 외 모든 종목"), true);
+  assert.equal(dataSource.includes("ATV 외 모든 종목"), false);
+  assert.equal(dataSource.indexOf("수상레저 예약금") < dataSource.indexOf("ATV 예약금"), true);
   assert.equal(accountSource.includes("depositAccounts.map"), true);
+  assert.equal(accountSource.includes("wideFirstAccount?: boolean;"), true);
+  assert.equal(accountSource.includes("lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"), true);
+  assert.equal(accountSource.includes("lg:grid-cols-2"), true);
 });

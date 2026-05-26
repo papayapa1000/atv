@@ -11,6 +11,15 @@ export const businessInfo = {
 
 export const depositAccounts = [
   {
+    key: "water-leisure",
+    title: "수상레저 예약금",
+    target: "수상스키, 웨이크보드, 수상 놀이기구, 모터보트, 단체 패키지",
+    owner: "제천수상레저(주)",
+    bank: "농협",
+    accountNumber: "351-1008-4485-63",
+    guidance: "수상스키, 웨이크보드, 수상 놀이기구, 모터보트 예약금은 이 계좌로 입금해 주세요.",
+  },
+  {
     key: "atv",
     title: "ATV 예약금",
     target: "ATV 이용 시",
@@ -18,15 +27,6 @@ export const depositAccounts = [
     bank: "국민은행",
     accountNumber: "702701-01-514922",
     guidance: "즐길거리에서 ATV를 선택했다면 이 계좌로 입금해 주세요.",
-  },
-  {
-    key: "water-leisure",
-    title: "ATV 외 모든 종목",
-    target: "수상스키, 웨이크보드, 수상 놀이기구, 모터보트, 단체 패키지",
-    owner: "제천수상레저(주)",
-    bank: "농협",
-    accountNumber: "351-1008-4485-63",
-    guidance: "ATV가 아니라면 이 계좌로 입금해 주세요.",
   },
 ] as const;
 
@@ -117,21 +117,21 @@ export const programCards = [
     title: "자이언트마블",
     eyebrow: "Giant Marble",
     description: "빅마블보다 큰 탑승감으로 물살 위 움직임을 크게 느끼는 코스입니다. 현장 상황과 인원에 맞춰 이용 가능 여부를 확인합니다.",
-    image: "/images/activity-big-marble.webp",
+    image: "/images/activity-giant-marble.webp",
     price: "1인 20,000원",
   },
   {
     title: "G-Ral",
     eyebrow: "Thrill Ride",
     description: "강한 방향 전환과 빠른 견인감이 중심인 스릴형 놀이기구입니다. 탑승 전 안전요원 안내에 따라 이용합니다.",
-    image: "/images/activity-bandwagon.webp",
+    image: "/images/activity-g-ral.webp",
     price: "1인 20,000원",
   },
   {
     title: "핵사곤",
     eyebrow: "Hexagon",
     description: "여럿이 함께 타는 수상 놀이기구로 단체 일정에 넣기 좋습니다. 다른 놀이기구와 묶는 패키지 구성은 전화로 확인합니다.",
-    image: "/images/activity-big-marble.webp",
+    image: "/images/activity-hexagon.webp",
     price: "1인 20,000원",
   },
   {
