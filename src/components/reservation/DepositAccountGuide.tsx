@@ -6,9 +6,16 @@ type DepositAccountGuideProps = {
   headingLevel?: "h2" | "h3";
   layout?: "stacked" | "horizontal";
   wideFirstAccount?: boolean;
+  showDepositAmount?: boolean;
 };
 
-export function DepositAccountGuide({ compact = false, headingLevel = "h2", layout = "stacked", wideFirstAccount = false }: DepositAccountGuideProps) {
+export function DepositAccountGuide({
+  compact = false,
+  headingLevel = "h2",
+  layout = "stacked",
+  wideFirstAccount = false,
+  showDepositAmount = false,
+}: DepositAccountGuideProps) {
   const HeadingTag = headingLevel;
   const isHorizontal = layout === "horizontal";
   const accountGridColumns = wideFirstAccount ? "lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]" : "lg:grid-cols-2";
@@ -50,10 +57,16 @@ export function DepositAccountGuide({ compact = false, headingLevel = "h2", layo
                     <dt className="font-bold text-foreground/58">은행</dt>
                     <dd className="font-extrabold text-foreground">{account.bank}</dd>
                   </div>
-                  <div className="grid min-h-10 grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 py-2">
+                  <div className={`grid min-h-10 grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 py-2 ${showDepositAmount ? "border-b border-foreground/10" : ""}`}>
                     <dt className="font-bold text-foreground/58">계좌번호</dt>
                     <dd className={`numeric break-all pr-2 font-extrabold text-foreground sm:break-normal sm:pr-3 sm:whitespace-nowrap ${isAtv ? "text-sm lg:pr-4" : "text-base"}`}>{account.accountNumber}</dd>
                   </div>
+                  {showDepositAmount ? (
+                    <div className="grid min-h-10 grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-3 py-2">
+                      <dt className="font-bold text-foreground/58">예약금</dt>
+                      <dd className="numeric font-extrabold text-foreground">50,000원</dd>
+                    </div>
+                  ) : null}
                 </dl>
               </article>
             );

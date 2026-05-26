@@ -18,7 +18,7 @@ export default function ReservationWritePage() {
       <ReservationSubnav active="write" />
       <section className="px-5 py-10 lg:px-8 lg:py-14">
         <div className="mx-auto grid max-w-[1180px] gap-6">
-          <DepositAccountGuide layout="horizontal" headingLevel="h2" wideFirstAccount />
+          <DepositAccountGuide layout="horizontal" headingLevel="h2" wideFirstAccount showDepositAmount />
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
             <div className="border border-foreground/12 bg-surface p-4 sm:p-6 lg:p-7">
