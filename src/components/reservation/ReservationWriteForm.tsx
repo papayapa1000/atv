@@ -163,18 +163,18 @@ export function ReservationWriteForm() {
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
           <span className={fieldLabelClass}>이용레저</span>
-          <input
+          <select
             name="leisureType"
-            list="leisure-options"
             defaultValue={state.values.leisureType ?? ""}
-            placeholder="이용하실 레저"
             className={fieldControlClass}
-          />
-          <datalist id="leisure-options">
+          >
+            <option value="">선택</option>
             {leisureOptions.map((item) => (
-              <option key={item} value={item} />
+              <option key={item} value={item}>
+                {item}
+              </option>
             ))}
-          </datalist>
+          </select>
           {fieldError(state, "leisureType")}
         </label>
         <TextField state={state} name="depositorName" label="입금자명" placeholder="입금자명" />

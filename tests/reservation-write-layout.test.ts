@@ -32,6 +32,19 @@ test("reservation write page uses a compact form layout", () => {
   assert.equal(formSource.includes("px-5 py-3 text-sm"), true);
 });
 
+test("reservation write form uses a native select for leisure type", () => {
+  const formSource = readFileSync("src/components/reservation/ReservationWriteForm.tsx", "utf8");
+
+  assert.equal(formSource.includes('name="leisureType"'), true);
+  assert.equal(formSource.includes('list="leisure-options"'), false);
+  assert.equal(formSource.includes("<datalist"), false);
+  assert.equal(formSource.includes("<select"), true);
+  assert.equal(formSource.includes('"수상스키"'), true);
+  assert.equal(formSource.includes('"ATV"'), true);
+  assert.equal(formSource.includes("<option key={item} value={item}>"), true);
+  assert.equal(formSource.includes("{item}"), true);
+});
+
 test("reservation write page places the account guide horizontally above the form", () => {
   const pageSource = readFileSync("src/app/reservation/write/page.tsx", "utf8");
   const accountSource = readFileSync("src/components/reservation/DepositAccountGuide.tsx", "utf8");
