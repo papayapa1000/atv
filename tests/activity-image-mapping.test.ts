@@ -7,7 +7,6 @@ const publicImageMappings = [
   "activity-wakeboard.webp",
   "activity-flyfish-1.webp",
   "activity-banana-boat.webp",
-  "activity-bandwagon.webp",
   "activity-peanut-boat.webp",
   "activity-big-marble.webp",
   "activity-giant-marble.webp",
@@ -41,12 +40,19 @@ test("activities page uses item-specific images for matched ride names", () => {
   assert.match(objectContaining(source, 'id: "wakeboard"'), /image: "\/images\/activity-wakeboard\.webp"/);
   assert.match(objectContaining(source, 'id: "flyfish"'), /image: "\/images\/activity-flyfish-1\.webp"/);
   assert.match(objectContaining(source, 'id: "banana-boat"'), /image: "\/images\/activity-banana-boat\.webp"/);
-  assert.match(objectContaining(source, 'id: "bandwagon"'), /image: "\/images\/activity-bandwagon\.webp"/);
   assert.match(objectContaining(source, 'id: "peanut-boat"'), /image: "\/images\/activity-peanut-boat\.webp"/);
   assert.match(objectContaining(source, 'id: "big-marble"'), /image: "\/images\/activity-big-marble\.webp"/);
   assert.match(objectContaining(source, 'id: "giant-marble"'), /image: "\/images\/activity-giant-marble\.webp"/);
   assert.match(objectContaining(source, 'id: "g-ral"'), /image: "\/images\/activity-g-ral\.webp"/);
   assert.match(objectContaining(source, 'id: "hexagon"'), /image: "\/images\/activity-hexagon\.webp"/);
+});
+
+test("activities page no longer lists the bandwagon ride", () => {
+  const source = readFileSync("src/app/activities/page.tsx", "utf8");
+
+  assert.equal(source.includes('id: "bandwagon"'), false);
+  assert.equal(source.includes('title: "밴드웨건"'), false);
+  assert.equal(source.includes("/images/activity-bandwagon.webp"), false);
 });
 
 test("home quick info and program data mirror the matched activity images", () => {
@@ -64,4 +70,12 @@ test("home quick info and program data mirror the matched activity images", () =
   assert.match(siteDataSource, /eyebrow: "Giant Marble"[\s\S]{0,300}image: "\/images\/activity-giant-marble\.webp"/);
   assert.match(siteDataSource, /eyebrow: "Thrill Ride"[\s\S]{0,300}image: "\/images\/activity-g-ral\.webp"/);
   assert.match(siteDataSource, /eyebrow: "Hexagon"[\s\S]{0,300}image: "\/images\/activity-hexagon\.webp"/);
+});
+
+test("site program and pricing data do not expose bandwagon", () => {
+  const siteDataSource = readFileSync("src/lib/site-data.ts", "utf8");
+
+  assert.equal(siteDataSource.includes('title: "밴드웨건"'), false);
+  assert.equal(siteDataSource.includes("밴드웨건 1인 기준 20,000원"), false);
+  assert.equal(siteDataSource.includes("/images/activity-bandwagon.webp"), false);
 });

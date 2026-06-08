@@ -93,13 +93,6 @@ export const programCards = [
     price: "1인 20,000원",
   },
   {
-    title: "밴드웨건",
-    eyebrow: "Bandwagon",
-    description: "넓은 탑승감과 빠른 견인감이 함께 있는 단체형 놀이기구입니다. 인원이 많거나 여러 코스를 묶는 일정에 함께 상담하기 좋습니다.",
-    image: "/images/activity-bandwagon.webp",
-    price: "1인 20,000원",
-  },
-  {
     title: "땅콩보트",
     eyebrow: "Peanut Boat",
     description: "낮은 자세로 물살을 가까이 느끼는 놀이기구입니다. 가볍게 시작하면서도 속도감을 느끼고 싶은 방문객에게 맞습니다.",
@@ -166,7 +159,6 @@ export const pricingGroups = [
     items: [
       "플라이피쉬 1인 기준 25,000원",
       "바나나보트 1인 기준 20,000원",
-      "밴드웨건 1인 기준 20,000원",
       "땅콩보트 1인 기준 20,000원",
       "빅마블·자이언트마블 1인 기준 20,000원",
       "G-Ral·핵사곤 1인 기준 20,000원",

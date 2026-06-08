@@ -65,18 +65,6 @@ const activityItems: ActivityDetail[] = [
     prices: [{ label: "1인 기준", value: "20,000원" }],
   },
   {
-    id: "bandwagon",
-    title: "밴드웨건",
-    english: "Bandwagon",
-    category: "Water Ride",
-    image: "/images/activity-bandwagon.webp",
-    alt: "밴드웨건 수상 놀이기구",
-    quote: "넓은 탑승감과 빠른 견인감이 함께 있는 단체형 코스입니다.",
-    description:
-      "안정감 있는 탑승 형태에 속도감이 더해진 놀이기구입니다. 인원이 많거나 여러 종목을 묶는 일정에 함께 넣기 좋습니다.",
-    prices: [{ label: "1인 기준", value: "20,000원" }],
-  },
-  {
     id: "peanut-boat",
     title: "땅콩보트",
     english: "Peanut Boat",

@@ -40,6 +40,7 @@ test("reservation write form uses a native select for leisure type", () => {
   assert.equal(formSource.includes("<datalist"), false);
   assert.equal(formSource.includes("<select"), true);
   assert.equal(formSource.includes('"수상스키"'), true);
+  assert.equal(formSource.includes('"밴드웨건"'), false);
   assert.equal(formSource.includes('"ATV"'), true);
   assert.equal(formSource.includes("<option key={item} value={item}>"), true);
   assert.equal(formSource.includes("{item}"), true);

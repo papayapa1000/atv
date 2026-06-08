@@ -24,14 +24,13 @@ test("home quick info defaults to rides and updates detail from the list", () =>
   assert.equal(source.includes("aria-selected={item.title === featured.title}"), false);
 });
 
-test("home quick info lists all twelve activity items", () => {
+test("home quick info lists all eleven activity items without bandwagon", () => {
   const source = readFileSync("src/components/home/QuickInfo.tsx", "utf8");
   const expectedTitles = [
     "수상스키",
     "웨이크보드",
     "플라이피쉬",
     "바나나보트",
-    "밴드웨건",
     "땅콩보트",
     "빅마블",
     "자이언트마블",
@@ -46,8 +45,9 @@ test("home quick info lists all twelve activity items", () => {
   }
 
   assert.equal(source.includes('title: "놀이기구"'), false);
+  assert.equal(source.includes('title: "밴드웨건"'), false);
   assert.equal(source.includes('title: "밴드웨곤"'), false);
-  assert.equal((source.match(/href: "\/activities#/g) ?? []).length, 12);
+  assert.equal((source.match(/href: "\/activities#/g) ?? []).length, 11);
 });
 
 test("home quick info list is vertically scrollable on desktop only", () => {

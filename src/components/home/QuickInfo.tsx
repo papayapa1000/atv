@@ -37,13 +37,6 @@ const serviceTabs = [
     href: "/activities#banana-boat",
   },
   {
-    title: "밴드웨건",
-    image: "/images/activity-bandwagon.webp",
-    prices: ["1인 기준 20,000원"],
-    note: "넓은 탑승감과 빠른 견인감이 함께 있는 단체형 코스입니다.",
-    href: "/activities#bandwagon",
-  },
-  {
     title: "땅콩보트",
     image: "/images/activity-peanut-boat.webp",
     prices: ["1인 기준 20,000원"],
