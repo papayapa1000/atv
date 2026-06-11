@@ -195,7 +195,7 @@ export default function WaterSkiAtvPage() {
               className="image-lift relative block min-h-[320px] overflow-hidden bg-mist"
             >
               <Image
-                src="/images/kakao-map-cheongpungho-1542-5.webp"
+                src="/images/kakao-map-cheongpungho-1542-5.png"
                 alt="카카오맵에서 본 제천 수상레저 & 청풍 ATV 주변 지도"
                 fill
                 sizes="(min-width: 1024px) 28vw, 100vw"

@@ -31,5 +31,5 @@ test("location section uses the updated road address", () => {
 
   assert.equal(source.includes("충북 제천시 금성면 청풍호로 1542-5"), true);
   assert.equal(source.includes(oldLotAddress), false);
-  assert.equal(source.includes("/images/kakao-map-cheongpungho-1542-5.webp"), true);
+  assert.equal(source.includes("/images/kakao-map-cheongpungho-1542-5.png"), true);
 });
